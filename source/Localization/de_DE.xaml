@@ -46,8 +46,9 @@ Du musst in den Plugin die Einstellungen &quot;{1}&quot; überprüfen</sys:Strin
     <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsBadConfig">RetroAchievements wurden in den Einstellungen nicht richtig konfiguriert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsNoConsoleId" xml:space="preserve">Keine ConsoleId wurde für {0} mit den Plattformen {1} gefunden.
 Verknüpfen Sie die Plattform in den Plugin-Einstellungen</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsShadPS4BadConfig">ShadPS4 has not been correctly configured in settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticate">Battle.net Benutzer ist nicht authentifiziert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateOverwatch">Battle.net Overwatch Benutzer ist nicht authentifiziert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateSc2">Battle.net StarCraft II Benutzer ist nicht authentifiziert</sys:String>
@@ -84,8 +85,9 @@ Verknüpfen Sie die Plattform in den Plugin-Einstellungen</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableEa">EA Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableXbox">Xbox Erfolge aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableRetroAchievements">RetroAchievements Erfolge aktivieren</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">RPCS3 Erfolge aktivieren</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Manuelle Errungenschaften aktivieren</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">RPCS3 Erfolge aktivieren</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Achievements">Enable ShadPS4 achievements</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Manuelle Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableOverwatchAchievements">Overwatch Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableSc2Achievements">StarCraft II Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableWowAchievements">World of Warcraft Errungenschaften aktivieren</sys:String>
@@ -93,9 +95,10 @@ Verknüpfen Sie die Plattform in den Plugin-Einstellungen</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableGameJoltAchievements">Game Jolt Erfolge aktivieren</sys:String>
 
     <sys:String x:Key="LOCSuccessStorySteamNoApi">API Nutzung deaktivieren (Verwenden Sie dies, wenn Sie keinen API Schlüssel haben)</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Benutzerverzeichnis</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Benutzerverzeichnis</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-    <sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Separate Ansicht für RetroAchievements anzeigen</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Separate Ansicht für RetroAchievements anzeigen</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryDatabase">Datenbank</sys:String>
     <sys:String x:Key="LOCSuccessStoryGetData">Errungenschaftsdaten herunterladen</sys:String>
