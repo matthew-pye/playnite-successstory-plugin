@@ -935,8 +935,9 @@ namespace SuccessStory.Clients
                                 UrlUnlocked = string.Format(BaseUrlUnlocked, (string)it["BadgeName"]),
                                 DateUnlocked = (it["DateEarned"] == null) ? (DateTime?) null : Convert.ToDateTime((string)it["DateEarned"]),
                                 Percent = it["NumAwarded"] == null || (int)it["NumAwarded"] == 0 || numDistinctPlayersCasual == 0 ? 100 : (int)it["NumAwarded"] * 100 / numDistinctPlayersCasual,
-                                GamerScore = it["Points"] == null ? 0 : (int)it["Points"]
-                            });
+                                GamerScore = it["Points"] == null ? 0 : (int)it["Points"],
+								DateUnlockedRaHardCore = (it["DateEarnedHardcore"] == null) ? (DateTime?)null : Convert.ToDateTime((string)it["DateEarnedHardcore"])
+							});
                         }
                     }
                 }

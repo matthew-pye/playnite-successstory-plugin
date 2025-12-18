@@ -141,9 +141,35 @@ namespace SuccessStory.Models
         /// </summary>
         public string CategoryRpcs3 { get; set; } = string.Empty;
 
-		public string CategoryShadPS4 { get; set; } = string.Empty;
+        public string CategoryShadPS4 { get; set; } = string.Empty;
 
-		private static string[] LocalResourceGames => new[]
+        [DontSerialize]
+        public bool IsRaHardCore => DateUnlockedRaHardCore != null;
+
+        public DateTime? DateUnlockedRaHardCore { get; set; }
+
+        private bool _showHardcore = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use hardcore unlock date instead of normal unlock date.
+        /// </summary>
+        [DontSerialize]
+        public bool ShowHardcore
+        {
+            get => _showHardcore;
+            set => SetValue(ref _showHardcore, value);
+        }
+
+        /// <summary>
+        /// Gets the effective unlock date based on ShowHardcore flag.
+        /// </summary>
+        [DontSerialize]
+        private DateTime? EffectiveDateUnlocked => ShowHardcore ? DateUnlockedRaHardCore : DateUnlocked;
+
+        /// <summary>
+        /// List of local resource games for image path resolution.
+        /// </summary>
+        private static string[] LocalResourceGames => new[]
         {
             "rpcs3", "hidden_trophy", "GenshinImpact", "WutheringWaves", "HonkaiStarRail", "ZenlessZoneZero", "default_icon"
         };
@@ -161,13 +187,13 @@ namespace SuccessStory.Models
                 {
                     tempUrlUnlocked = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, UrlUnlocked);
                     return tempUrlUnlocked;
-				}
-				if (tempUrlUnlocked?.Contains("shadps4", StringComparison.InvariantCultureIgnoreCase) ?? false)
-				{
-					tempUrlUnlocked = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, UrlUnlocked);
-					return tempUrlUnlocked;
-				}
-				if (LocalResourceGames.Any(game => tempUrlUnlocked?.Contains(game, StringComparison.InvariantCultureIgnoreCase) == true))
+                }
+                if (tempUrlUnlocked?.Contains("shadps4", StringComparison.InvariantCultureIgnoreCase) ?? false)
+                {
+                    tempUrlUnlocked = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, UrlUnlocked);
+                    return tempUrlUnlocked;
+                }
+                if (LocalResourceGames.Any(game => tempUrlUnlocked?.Contains(game, StringComparison.InvariantCultureIgnoreCase) == true))
                 {
                     tempUrlUnlocked = Path.Combine(PluginDatabase.Paths.PluginPath, "Resources", UrlUnlocked);
                     return tempUrlUnlocked;
@@ -347,7 +373,7 @@ namespace SuccessStory.Models
         /// Gets a value indicating whether the achievement is unlocked.
         /// </summary>
         [DontSerialize]
-        public bool IsUnlock => DateWhenUnlocked != null || DateUnlocked.ToString().Contains("1982");
+        public bool IsUnlock => DateWhenUnlocked != null || EffectiveDateUnlocked.ToString().Contains("1982");
 
         private bool _isVisible = true;
 
@@ -359,13 +385,18 @@ namespace SuccessStory.Models
 
         /// <summary>
         /// Gets or sets the local date and time when the achievement was unlocked, or null if not unlocked.
+        /// Uses hardcore date if ShowHardcore is true.
         /// </summary>
         [DontSerialize]
         public DateTime? DateWhenUnlocked
         {
-            get => DateUnlocked == null || DateUnlocked.Value.Year == 0001 || DateUnlocked.Value.Year == 1982
+            get
+            {
+                DateTime? effectiveDate = EffectiveDateUnlocked;
+                return effectiveDate == null || effectiveDate.Value.Year == 0001 || effectiveDate.Value.Year == 1982
                     ? null
-                    : (DateTime?)((DateTime)DateUnlocked).ToLocalTime();
+                    : (DateTime?)((DateTime)effectiveDate).ToLocalTime();
+            }
             set => DateUnlocked = value;
         }
 

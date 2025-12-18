@@ -52,7 +52,6 @@ namespace SuccessStory.Controls
             });
         }
 
-
         public override void SetDefaultDataContext()
         {
             bool IsActivated = PluginDatabase.PluginSettings.Settings.EnableIntegrationUserStats;
@@ -67,7 +66,6 @@ namespace SuccessStory.Controls
             ControlDataContext.Height = Height;
             ControlDataContext.ItemsSource = null;
         }
-
 
         public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
         {

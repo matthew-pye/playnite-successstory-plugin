@@ -65,10 +65,9 @@ namespace SuccessStory.Controls
             ControlDataContext.ItemsSource = new ObservableCollection<Achievement>();
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
             gameAchievements.OrderAchievement = PluginDatabase.PluginSettings.Settings.IntegrationCompactOrderAchievement;
             ControlDataContext.ItemsSource = gameAchievements.OrderItems;
         }

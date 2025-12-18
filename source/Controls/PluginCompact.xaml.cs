@@ -7,17 +7,14 @@ using SuccessStory.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using SuccessStory.Controls.Customs;
 using CommonPluginsShared.Converters;
 using System.Globalization;
-using CommonPluginsShared.Extensions;
 using Playnite.SDK;
 using System.Windows.Media.Effects;
 
@@ -77,6 +74,7 @@ namespace SuccessStory.Controls
             });
         }
 
+
         public override void SetDefaultDataContext()
         {
             bool IsActivated = PluginDatabase.PluginSettings.Settings.EnableIntegrationCompactLocked;
@@ -103,7 +101,7 @@ namespace SuccessStory.Controls
             }
         }
 
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
             if (!IsUnlocked)
             {
@@ -115,7 +113,7 @@ namespace SuccessStory.Controls
             PART_ScCompactView.Children.Clear();
             PART_ScCompactView.ColumnDefinitions.Clear();
 
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
             ObservableCollection<Achievement> achievements;
 
             // Select data

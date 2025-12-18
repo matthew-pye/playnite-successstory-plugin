@@ -62,10 +62,9 @@ namespace SuccessStory.Controls
             ControlDataContext.Total = 0;
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
 
             ControlDataContext.Unlocked = gameAchievements.Unlocked;
             ControlDataContext.Total = gameAchievements.Total;

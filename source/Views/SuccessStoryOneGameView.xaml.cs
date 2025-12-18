@@ -6,15 +6,10 @@ using SuccessStory.Models;
 using SuccessStory.Services;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 
 namespace SuccessStory.Views
 {
@@ -64,28 +59,18 @@ namespace SuccessStory.Views
                 ControlDataContext.SourceLink = string.Empty;
             }
 
-            if (gameAchievements?.HasData ?? false)
-            {
-                ControlDataContext.AchCommon = gameAchievements.Common;
-                ControlDataContext.AchNoCommon = gameAchievements.UnCommon;
-                ControlDataContext.AchRare = gameAchievements.Rare;
-                ControlDataContext.AchUltraRare = gameAchievements.UltraRare;
-
-                ControlDataContext.TotalGamerScore = gameAchievements.TotalGamerScore;
-
-                ControlDataContext.EstimateTime = gameAchievements.EstimateTime?.EstimateTime;
-
-                LocalDateTimeConverter converter = new LocalDateTimeConverter();
-                ControlDataContext.FirstUnlock = (string)converter.Convert(gameAchievements.Items.Select(x => x.DateWhenUnlocked).Min(), null, null, CultureInfo.CurrentCulture);
-                ControlDataContext.LastUnlock = (string)converter.Convert(gameAchievements.Items.Select(x => x.DateWhenUnlocked).Max(), null, null, CultureInfo.CurrentCulture);
-                ControlDataContext.DateLastRefresh = (string)converter.Convert(gameAchievements.DateLastRefresh, null, null, CultureInfo.CurrentCulture);
-            }
-
-
             ControlDataContext.GameContext = gameContext;
             ControlDataContext.Settings = PluginDatabase.PluginSettings.Settings;
 
             ControlDataContext.HasDataStats = gameAchievements?.HasDataStats ?? false;
+
+            PART_Hardcore.Visibility = Visibility.Collapsed;
+
+            if (gameAchievements?.HasData ?? false)
+            {
+                PART_Hardcore.Visibility = gameAchievements.IsRa ? Visibility.Visible : Visibility.Collapsed;
+                UpdateStats((bool)PART_Hardcore.IsChecked);
+            }
         }
 
 
@@ -104,6 +89,40 @@ namespace SuccessStory.Views
             {
                 Common.LogError(ex, false, true, PluginDatabase.PluginName);
             }
+        }
+
+        private void PART_Hardcore_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateStats((bool)PART_Hardcore.IsChecked);
+        }
+
+        private void PART_Hardcore_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UpdateStats((bool)PART_Hardcore.IsChecked);
+        }
+
+        private void UpdateStats(bool showHardcore)
+        {
+            GameAchievements gameAchievements = PluginDatabase.Get(ControlDataContext.GameContext, true);
+            gameAchievements.Items = gameAchievements?.Items.Select(x =>
+            {
+                x.ShowHardcore = showHardcore;
+                return x;
+            }).ToList();
+
+            ControlDataContext.AchCommon = gameAchievements.Common;
+            ControlDataContext.AchNoCommon = gameAchievements.UnCommon;
+            ControlDataContext.AchRare = gameAchievements.Rare;
+            ControlDataContext.AchUltraRare = gameAchievements.UltraRare;
+
+            ControlDataContext.TotalGamerScore = gameAchievements.TotalGamerScore;
+
+            ControlDataContext.EstimateTime = gameAchievements.EstimateTime?.EstimateTime;
+
+            LocalDateTimeConverter converter = new LocalDateTimeConverter();
+            ControlDataContext.FirstUnlock = (string)converter.Convert(gameAchievements.Items.Select(x => x.DateWhenUnlocked).Min(), null, null, CultureInfo.CurrentCulture);
+            ControlDataContext.LastUnlock = (string)converter.Convert(gameAchievements.Items.Select(x => x.DateWhenUnlocked).Max(), null, null, CultureInfo.CurrentCulture);
+            ControlDataContext.DateLastRefresh = (string)converter.Convert(gameAchievements.DateLastRefresh, null, null, CultureInfo.CurrentCulture);
         }
     }
 

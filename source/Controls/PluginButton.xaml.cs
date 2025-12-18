@@ -67,10 +67,9 @@ namespace SuccessStory.Controls
             ControlDataContext.Maximum = 0;
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
 
             ControlDataContext.Is100Percent = gameAchievements.Is100Percent;
             ControlDataContext.LabelContent = gameAchievements.Unlocked + "/" + gameAchievements.Total;
@@ -80,6 +79,7 @@ namespace SuccessStory.Controls
         
 
         #region Events
+
         private void PART_PluginButton_Click(object sender, RoutedEventArgs e)
         {
             WindowOptions windowOptions = new WindowOptions
@@ -127,6 +127,7 @@ namespace SuccessStory.Controls
             Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCSuccessStoryAchievements"), ViewExtension, windowOptions);
             _ = windowExtension.ShowDialog();
         }
+
         #endregion
     }
 

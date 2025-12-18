@@ -36,6 +36,7 @@ namespace SuccessStory.Controls
 
 
         #region Properties
+
         public bool DisableAnimations
         {
             get => (bool)GetValue(DisableAnimationsProperty);
@@ -47,7 +48,6 @@ namespace SuccessStory.Controls
             typeof(bool),
             typeof(PluginChart),
             new FrameworkPropertyMetadata(true, ControlsPropertyChangedCallback));
-
 
         public int LabelsRotation
         {
@@ -64,6 +64,19 @@ namespace SuccessStory.Controls
 
         public static readonly DependencyProperty AxisLimitProperty;
         public int AxisLimit { get; set; } = 0;
+
+        public bool ShowHardcore
+        {
+            get => (bool)GetValue(ShowHardcoreProperty);
+            set => SetValue(ShowHardcoreProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowHardcoreProperty = DependencyProperty.Register(
+            nameof(ShowHardcore),
+            typeof(bool),
+            typeof(PluginChart),
+            new FrameworkPropertyMetadata(false, ControlsPropertyChangedCallback));
+
         #endregion
 
 
@@ -133,10 +146,14 @@ namespace SuccessStory.Controls
             ControlDataContext.LabelsRotation = LabelsRotation;
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
+            gameAchievements.Items = gameAchievements?.Items.Select(x =>
+            {
+                x.ShowHardcore = ShowHardcore;
+                return x;
+            }).ToList();
 
             AchGraphicsDataCount GraphicsData = null;
             bool CutPeriod = ControlDataContext.AllPeriod && ControlDataContext.CutPeriod;

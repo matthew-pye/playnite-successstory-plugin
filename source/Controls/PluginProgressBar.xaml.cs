@@ -83,10 +83,9 @@ namespace SuccessStory.Controls
             ControlDataContext.LabelContent = string.Empty;
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
 
             ControlDataContext.Percent = gameAchievements.Progression;
             ControlDataContext.Value = gameAchievements.Unlocked;
