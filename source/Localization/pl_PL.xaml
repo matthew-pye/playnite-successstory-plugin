@@ -48,6 +48,7 @@ Musisz sprawdzić &quot;{1}&quot; w ustawieniach wtyczki</sys:String>
 Associate the platform in the plugin settings</sys:String>
 	<sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">Program RPCS3 nie został poprawnie skonfigurowany w ustawieniach</sys:String>
 	<sys:String x:Key="LOCSuccessStoryNotificationsShadPS4BadConfig">ShadPS4 nie został poprawnie skonfigurowany w ustawieniach</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsXbox360BadConfig">Osiągnięcia Xbox360 nie zostały poprawnie skonfigurowane w ustawieniach</sys:String>
 	<sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net jest włączony w SuccessStory, ale rozszerzenie biblioteki zostało wyłączone w Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticate">Użytkownik Battle.net nie jest uwierzytelniony</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateOverwatch">Użytkownik Battle.net Overwatch nie jest uwierzytelniony</sys:String>
@@ -87,6 +88,7 @@ Associate the platform in the plugin settings</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableRetroAchievements">Włącz osiągnięcia RetroAchievements</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">Włącz osiągnięcia RPCS3</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Achievements">Włącz osiągnięcia ShadPS4</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXbox360Achievements">Włącz osiągnięcia Xbox360</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Włącz ręczne osiągnięcia</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableOverwatchAchievements">Włącz osiągnięcia Overwatch</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableSc2Achievements">Włącz osiągnięcia StarCraft II</sys:String>
@@ -97,6 +99,8 @@ Associate the platform in the plugin settings</sys:String>
     <sys:String x:Key="LOCSuccessStorySteamNoApi">Wyłącz wykorzystanie API (Używaj, gdy nie masz klucza API)</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Katalog domowy użytkownika</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">Folder użytkownika ShadPS4</sys:String>
+
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Lokalizacja Xenia__canary.exe</sys:String>
 
 	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Pokaż oddzielny widok dla osiągnięć RetroAchievements</sys:String>
 
