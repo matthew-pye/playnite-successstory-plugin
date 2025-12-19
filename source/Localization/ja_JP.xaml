@@ -48,7 +48,7 @@ You must check &quot;{1}&quot; in plugin settings</sys:String>
 Associate the platform in the plugin settings</sys:String>
 	<sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 の設定が正しく設定されていません</sys:String>
 	<sys:String x:Key="LOCSuccessStoryNotificationsShadPS4BadConfig">ShadPS4 has not been correctly configured in settings</sys:String>
-	<sys:String x:Key="LOCSuccessStoryNotificationsXbox360BadConfig">Xbox350 Achievements have not been correctly configured in settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsXbox360BadConfig">Xbox360 Achievements have not been correctly configured in settings</sys:String>
 	<sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net は SuccessStory で有効になっていますが、Playnite でライブラリ拡張機能が無効になっています</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticate">Battle.net ユーザーが認証されていません</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateOverwatch">Battle.net Overwatch ユーザーが認証されていません</sys:String>
