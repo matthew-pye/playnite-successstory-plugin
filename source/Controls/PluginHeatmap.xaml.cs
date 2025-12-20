@@ -1,17 +1,12 @@
-﻿using CommonPluginsControls.Controls;
-using CommonPluginsShared.Collections;
+﻿using CommonPluginsShared.Collections;
 using CommonPluginsShared.Controls;
-using CommonPluginsShared.Extensions;
 using CommonPluginsShared.Interfaces;
-using MoreLinq;
 using Playnite.SDK;
-using Playnite.SDK.Data;
 using Playnite.SDK.Models;
 using SuccessStory.Models;
 using SuccessStory.Services;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,14 +21,15 @@ namespace SuccessStory.Controls
     public partial class PluginHeatmap : PluginUserControlExtend
     {
         private SuccessStoryDatabase PluginDatabase => SuccessStory.PluginDatabase;
-        internal override IPluginDatabase pluginDatabase => PluginDatabase;
+        protected override IPluginDatabase pluginDatabase => PluginDatabase;
 
         private PluginHeatmapDataContext ControlDataContext = new PluginHeatmapDataContext();
-        internal override IDataContext controlDataContext
+        protected override IDataContext controlDataContext
         {
             get => ControlDataContext;
             set => ControlDataContext = (PluginHeatmapDataContext)controlDataContext;
         }
+
 
         public List<KeyValuePair<string, List<(Game Game, Achievement Achievement)>>> Data
         {
@@ -54,6 +50,7 @@ namespace SuccessStory.Controls
                 obj.SetData(null, null);
             }
         }
+
 
         public PluginHeatmap()
         {
@@ -92,8 +89,7 @@ namespace SuccessStory.Controls
             ControlDataContext.IsActivated = IsActivated;
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
             PART_Data.Children.Clear();
             Data?.ForEach(x =>

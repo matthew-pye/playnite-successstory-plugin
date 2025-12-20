@@ -8,7 +8,7 @@
     
     <sys:String x:Key="LOCSuccessStoryHiddenTrophy">Прихований трофей</sys:String>
 
-    <sys:String x:Key="LOCSsRefreshRaretyManual">Оновити рідкість для користувацьких досягнень</sys:String>
+    <sys:String x:Key="LOCSsRefreshRaretyManual">Оновити рідкісність для користувацьких досягнень</sys:String>
     <sys:String x:Key="LOCSsRefreshEstimateTimeManual">Оновити приблизний час користувацьких досягнень</sys:String>
     
     <!-- MainView -->
@@ -39,13 +39,17 @@
     <sys:String x:Key="LOCSuccessStoryNotificationsGogBadConfig">GOG неправильно налаштовано в налаштуваннях</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsPsnDisabled">PSN увімкнено в SuccessStory але розширення бібліотеки було вимкнено в Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsPsnNoAuthenticate">Користувач PSN не автентифікований</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsOriginDisabled">EA увімкнено в SuccessStory але розширення бібліотеки було вимкнено в Playnite</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsOriginNoAuthenticate">Користувач EA не автентифікований</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsEaDisabled">EA увімкнено в SuccessStory але розширення бібліотеки було вимкнено в Playnite</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsEaNoAuthenticate">Користувач EA не автентифікований</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsXboxDisabled">Xbox увімкнено в SuccessStory але розширення бібліотеки було вимкнено в Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsXboxNotAuthenticate">Користувач Xbox не автентифікований</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsBadConfig">RetroAchievements неправильно налаштовано в налаштуваннях</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 неправильно налаштовано в налаштуваннях</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net увімкнено в SuccessStory але розширення бібліотеки було вимкнено в Playnite</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsNoConsoleId" xml:space="preserve">Не знайдено ConsoleId для {0} з платформами {1}.
+Пов'яжіть платформу з плагіном в налаштуваннях</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 неправильно налаштовано в налаштуваннях</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsShadPS4BadConfig">ShadPS4 has not been correctly configured in settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsXbox360BadConfig">Xbox360 Achievements have not been correctly configured in settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net увімкнено в SuccessStory але розширення бібліотеки було вимкнено в Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticate">Користувач Battle.net не автентифікований</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateOverwatch">Користувач Battle.net Overwatch не автентифікований</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateSc2">Користувач Battle.net StarCraft II не автентифікований</sys:String>
@@ -79,11 +83,13 @@
     <sys:String x:Key="LOCSuccessStoryEnableSteam">Увімкнути досягнення Steam</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableGog">Увімкнути досягнення GOG</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableEpic">Увімкнути досягнення Epic</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableOrigin">Увімкнути досягнення EA</sys:String>
+    <sys:String x:Key="LOCSuccessStoryEnableEa">Увімкнути досягнення EA</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableXbox">Увімкнути досягнення Xbox</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableRetroAchievements">Увімкнути досягнення RetroAchievements</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">Увімкнути досягнення RPCS3</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Увімкнути користувацькі досягнення</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">Увімкнути досягнення RPCS3</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Achievements">Enable ShadPS4 achievements</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXbox360Achievements">Enable Xbox 360 achievements</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Увімкнути користувацькі досягнення</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableOverwatchAchievements">Увімкнути досягнення Overwatch</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableSc2Achievements">Увімкнути досягнення StarCraft II</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableWowAchievements">Увімкнути досягнення World of Warcraft</sys:String>
@@ -91,9 +97,12 @@
     <sys:String x:Key="LOCSuccessStoryEnableGameJoltAchievements">Увімкнути досягнення Game Jolt</sys:String>
 
     <sys:String x:Key="LOCSuccessStorySteamNoApi">Вимкнути використання API (використовувати, коли у вас немає ключа API)</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Домашня тека користувача</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Домашня тека користувача</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-    <sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Використовувати окремий вигляд для RetroAchievements</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia__canary.exe location</sys:String>
+
+	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Використовувати окремий вигляд для RetroAchievements</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryDatabase">База даних</sys:String>
     <sys:String x:Key="LOCSuccessStoryGetData">Завантажити дані досягнень</sys:String>
@@ -137,8 +146,8 @@
     <sys:String x:Key="LOCSuccessStoryShowHiddenIcon">Показувати прихований значок якщо досягнення не здобуте</sys:String>
     <sys:String x:Key="LOCSuccessStoryShowHiddenTitle">Показувати прихований заголовок якщо досягнення не здобуте</sys:String>
     <sys:String x:Key="LOCSuccessStoryShowHiddenDescription">Показувати прихований опис коли досягнення заблоковано</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRaretyIndicator">Показувати індикатор рідкості на досягненні</sys:String>
-    <sys:String x:Key="LOCSuccessStoryDisplayRarityValue">Показати значення рідкості із зображенням досягнень</sys:String>
+    <sys:String x:Key="LOCSuccessStoryEnableRaretyIndicator">Показувати індикатор рідкісності на досягненні</sys:String>
+    <sys:String x:Key="LOCSuccessStoryDisplayRarityValue">Показати значення рідкісності із зображенням досягнень</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableOneGameView">Відображати лише досягнення гри, вибраної з ігрового меню</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableAuto100PercentCompleted">Автоматично встановлювати статус завершення на 100%, коли всі досягнення здобуто</sys:String>
     <sys:String x:Key="LOCSuccessStoryListGames">Список ігор</sys:String>
@@ -166,8 +175,8 @@
     <sys:String x:Key="LOCSuccessStoryRefreshDataInstalledRecentToolTip" xml:space="preserve">Скидання та завантаження досягнень встановлених ігор. (Використовуйте, якщо виникли проблеми з досягненнями)</sys:String>
     <sys:String x:Key="LOCSuccessStoryRefreshAllDataToolTip" xml:space="preserve">Скидання та завантаження досягнень всіх ігор. (Використовуйте, якщо виникли проблеми з досягненнями)</sys:String>
 
-    <sys:String x:Key="LOCSuccessStoryRarityConfig">Налаштування рідкості</sys:String>
-    <sys:String x:Key="LOCSuccessStoryUseUltraRare">Використовувати ультра-рідкісні досягнення</sys:String>
+    <sys:String x:Key="LOCSuccessStoryRarityConfig">Налаштування рідкісності</sys:String>
+    <sys:String x:Key="LOCSuccessStoryUseUltraRare">Використовувати ультрарідкісні досягнення</sys:String>
     
     <sys:String x:Key="LOCSuccessStoryEnableImageCache">Ввімкнути кешування зображень досягнень *</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableImageCacheToolTip" xml:space="preserve">Неблокуючий процес, який може трохи збільшити використання пам'яті при кешуванні.
@@ -201,7 +210,7 @@
     <sys:String x:Key="LOCSuccessStoryCommon">Поширені</sys:String>
     <sys:String x:Key="LOCSuccessStoryNoCommon">Не поширені</sys:String>
     <sys:String x:Key="LOCSuccessStoryRare">Рідкісні</sys:String>
-    <sys:String x:Key="LOCSuccessStoryUltraRare">Ультра-рідкісні</sys:String>
+    <sys:String x:Key="LOCSuccessStoryUltraRare">Ультрарідкісні</sys:String>
 
     <!-- SuccessStoryView -->
 

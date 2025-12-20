@@ -19,10 +19,10 @@ namespace SuccessStory.Controls
     public partial class PluginCompactList : PluginUserControlExtend
     {
         private SuccessStoryDatabase PluginDatabase => SuccessStory.PluginDatabase;
-        internal override IPluginDatabase pluginDatabase => PluginDatabase;
+        protected override IPluginDatabase pluginDatabase => PluginDatabase;
 
         private PluginCompactListDataContext ControlDataContext = new PluginCompactListDataContext();
-        internal override IDataContext controlDataContext
+        protected override IDataContext controlDataContext
         {
             get => ControlDataContext;
             set => ControlDataContext = (PluginCompactListDataContext)controlDataContext;
@@ -65,10 +65,9 @@ namespace SuccessStory.Controls
             ControlDataContext.ItemsSource = new ObservableCollection<Achievement>();
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
             gameAchievements.OrderAchievement = PluginDatabase.PluginSettings.Settings.IntegrationCompactOrderAchievement;
             ControlDataContext.ItemsSource = gameAchievements.OrderItems;
         }

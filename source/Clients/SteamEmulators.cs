@@ -45,20 +45,30 @@ namespace SuccessStory.Clients
 
         public SteamEmulators(List<Folder> LocalFolders) : base("SteamEmulators")
         {
-            AchievementsDirectories.Add("%PUBLIC%\\Documents\\Steam\\CODEX");
-            AchievementsDirectories.Add("%appdata%\\Steam\\CODEX");
+			AchievementsDirectories.Add("%PUBLIC%\\Documents\\Steam\\CODEX");
+			AchievementsDirectories.Add("%appdata%\\Steam\\CODEX");
 
-            AchievementsDirectories.Add("%DOCUMENTS%\\VALVE");
+			AchievementsDirectories.Add("%PUBLIC%\\Documents\\Steam\\RUNE"); //eFMann    
+			AchievementsDirectories.Add("%appdata%\\Steam\\RUNE");           //eFMann
 
-            AchievementsDirectories.Add("%appdata%\\Goldberg SteamEmu Saves");
-            AchievementsDirectories.Add("%appdata%\\SmartSteamEmu");
-            AchievementsDirectories.Add("%DOCUMENTS%\\DARKSiDERS");
+			AchievementsDirectories.Add("%PUBLIC%\\Documents\\EMPRESS"); //eFMann    
+			AchievementsDirectories.Add("%appdata%\\EMPRESS");           //eFMann
 
-            AchievementsDirectories.Add("%ProgramData%\\Steam");
-            AchievementsDirectories.Add("%localappdata%\\SKIDROW");
-            AchievementsDirectories.Add("%DOCUMENTS%\\SKIDROW");
+			AchievementsDirectories.Add("%PUBLIC%\\Documents\\OnlineFix"); //eFMann 
 
-            foreach (Folder folder in LocalFolders)
+			AchievementsDirectories.Add("%DOCUMENTS%\\VALVE");
+
+			AchievementsDirectories.Add("%appdata%\\Goldberg SteamEmu Saves");
+			AchievementsDirectories.Add("%appdata%\\GSE Saves"); //eFMann
+
+			AchievementsDirectories.Add("%appdata%\\SmartSteamEmu");
+			AchievementsDirectories.Add("%DOCUMENTS%\\DARKSiDERS");
+
+			AchievementsDirectories.Add("%ProgramData%\\Steam");
+			AchievementsDirectories.Add("%localappdata%\\SKIDROW");
+			AchievementsDirectories.Add("%DOCUMENTS%\\SKIDROW");
+
+			foreach (Folder folder in LocalFolders)
             {
                 AchievementsDirectories.Add(folder.FolderPath);
             }
@@ -72,6 +82,7 @@ namespace SuccessStory.Clients
 
 
         #region Configuration
+
         public override bool ValidateConfiguration()
         {
             // The authentification is only for localised achievement
@@ -83,6 +94,7 @@ namespace SuccessStory.Clients
             // No necessary activation
             return true;
         }
+
         #endregion
 
 
@@ -1118,6 +1130,7 @@ namespace SuccessStory.Clients
 
             return ReturnAchievements;
         }
+
         #endregion
     }
 

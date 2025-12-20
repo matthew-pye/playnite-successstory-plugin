@@ -1,23 +1,24 @@
-﻿using CommonPluginsShared;
+﻿using CommonPlayniteShared.Common;
+using CommonPluginsShared;
+using CommonPluginsShared.Extensions;
+using CommonPluginsShared.Models;
+using Playnite.SDK;
+using Playnite.SDK.Data;
+using Playnite.SDK.Models;
+using SuccessStory.Models;
+using SuccessStory.Models.RetroAchievements;
+using SuccessStory.Services;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Linq;
-using System.Text;
-using SuccessStory.Models;
-using Playnite.SDK.Models;
-using Playnite.SDK.Data;
 using System.IO;
-using System.Security.Cryptography;
 using System.IO.Compression;
-using System.Threading.Tasks;
-using CommonPluginsShared.Models;
-using CommonPluginsShared.Extensions;
-using SuccessStory.Services;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
-using Playnite.SDK;
-using SuccessStory.Models.RetroAchievements;
-using CommonPlayniteShared.Common;
+using System.Threading.Tasks;
+using static CommonPluginsShared.PlayniteTools;
 
 namespace SuccessStory.Clients
 {
@@ -27,6 +28,7 @@ namespace SuccessStory.Clients
     public class RetroAchievements : GenericAchievements
     {
         #region Urls
+
         /// <summary>
         /// Base URL for the RetroAchievements API.
         /// </summary>
@@ -41,6 +43,7 @@ namespace SuccessStory.Clients
         /// URL template for locked achievement badges.
         /// </summary>
         private static string BaseUrlLocked => @"https://s3-eu-west-1.amazonaws.com/i.retroachievements.org/Badge/{0}_lock.png";
+        
         #endregion
 
         /// <summary>
@@ -130,6 +133,7 @@ namespace SuccessStory.Clients
 
 
         #region Configuration
+
         public override bool ValidateConfiguration()
         {
             if (CachedConfigurationValidationResult == null)
@@ -138,12 +142,12 @@ namespace SuccessStory.Clients
 
                 if (!(bool)CachedConfigurationValidationResult)
                 {
-                    ShowNotificationPluginNoAuthenticate(PlayniteTools.ExternalPlugin.None);
+                    ShowNotificationPluginNoAuthenticate(ExternalPlugin.SuccessStory);
                 }
             }
             else if (!(bool)CachedConfigurationValidationResult)
             {
-                ShowNotificationPluginErrorMessage(PlayniteTools.ExternalPlugin.None);
+                ShowNotificationPluginErrorMessage(ExternalPlugin.SuccessStory);
             }
 
             return (bool)CachedConfigurationValidationResult;
@@ -158,15 +162,17 @@ namespace SuccessStory.Clients
         {
             return PluginDatabase.PluginSettings.Settings.EnableRetroAchievements;
         }
+
         #endregion
 
 
         #region RetroAchievements
+
         /// <summary>
         /// Retrieves the list of supported consoles from the RetroAchievements API.
         /// </summary>
         /// <returns>List of <see cref="RaConsole"/> objects.</returns>
-        public static List<RaConsole> GetConsoleIDs()
+        public List<RaConsole> GetConsoleIDs()
         {
             List<RaConsole> resultObj = new List<RaConsole>();
             string target = "API_GetConsoleIDs.php";
@@ -197,8 +203,16 @@ namespace SuccessStory.Clients
 
                 if (resultObj?.Count == 0)
                 {
-                    Exception ex = new Exception($"Failed to parse {response}");
-                    Common.LogError(ex, false, true, PluginDatabase.PluginName);
+                    if (response.Contains("Unauthenticated"))
+                    {
+                        ShowNotificationPluginNoAuthenticate(ExternalPlugin.SuccessStory);
+                        return resultObj;
+                    }
+                    else 
+                    {
+                        Exception ex = new Exception($"Failed to parse {response}");
+                        Common.LogError(ex, false, true, PluginDatabase.PluginName);
+                    }
                 }
                 else
                 {
@@ -214,12 +228,13 @@ namespace SuccessStory.Clients
         /// </summary>
         /// <param name="platformName">The platform name to match.</param>
         /// <returns>The console ID if found; otherwise, 0.</returns>
-        public static int FindConsole(string platformName)
+        public int FindConsole(string platformName)
         {
             List<RaConsole> raConsoles = GetConsoleIDs();
             int consoleID = 0;
 
             #region Normalize
+
             if (platformName.IsEqual("Sega Genesis"))
             {
                 platformName = "Mega Drive";
@@ -348,6 +363,7 @@ namespace SuccessStory.Clients
             {
                 platformName = "PC Engine";
             }
+
             #endregion
 
             RaConsole raConsole = raConsoles.Find(x => platformName.IsEqual(x.Name));
@@ -446,7 +462,14 @@ namespace SuccessStory.Clients
             IEnumerable<RaConsoleAssociated> consolesAssociated = PluginDatabase.PluginSettings.Settings.RaConsoleAssociateds.Where(x => x.Platforms.Find(y => y.Id == platform.Id) != null);
             if (consolesAssociated.Count() == 0)
             {
-                Logger.Warn($"No ConsoleId find for {game.Name} with Platforms {platform.Name}");
+                string message = string.Format(ResourceProvider.GetString("LOCSuccessStoryNotificationsRetroAchievementsNoConsoleId"), game.Name, platform.Name);
+                Logger.Warn($"No ConsoleId find for {game.Name} with platforms {platform.Name}");
+                API.Instance.Notifications.Add(new NotificationMessage(
+                    $"{PluginDatabase.PluginName}-{ClientName}-NoConsoleId",
+                    $"{PluginDatabase.PluginName}\r\n{message}",
+                    NotificationType.Error,
+                    () => PluginDatabase.Plugin.OpenSettingsView()
+                ));
                 return consoleId;
             }
             else if (consolesAssociated.Count() > 1)
@@ -887,6 +910,12 @@ namespace SuccessStory.Clients
 
             try
             {
+                if (response.Contains("Unauthenticated"))
+                {
+                    ShowNotificationPluginNoAuthenticate(ExternalPlugin.SuccessStory);
+                    return achievements;
+                }
+
                 dynamic resultObj = Serialization.FromJson<dynamic>(response);
 
                 GameNameAchievements = (string)resultObj["Title"];
@@ -906,8 +935,9 @@ namespace SuccessStory.Clients
                                 UrlUnlocked = string.Format(BaseUrlUnlocked, (string)it["BadgeName"]),
                                 DateUnlocked = (it["DateEarned"] == null) ? (DateTime?) null : Convert.ToDateTime((string)it["DateEarned"]),
                                 Percent = it["NumAwarded"] == null || (int)it["NumAwarded"] == 0 || numDistinctPlayersCasual == 0 ? 100 : (int)it["NumAwarded"] * 100 / numDistinctPlayersCasual,
-                                GamerScore = it["Points"] == null ? 0 : (int)it["Points"]
-                            });
+                                GamerScore = it["Points"] == null ? 0 : (int)it["Points"],
+								DateUnlockedRaHardCore = (it["DateEarnedHardcore"] == null) ? (DateTime?)null : Convert.ToDateTime((string)it["DateEarnedHardcore"])
+							});
                         }
                     }
                 }
@@ -920,6 +950,7 @@ namespace SuccessStory.Clients
 
             return achievements;
         }
+
         #endregion
     }
 }

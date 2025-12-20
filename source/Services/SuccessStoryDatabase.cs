@@ -55,12 +55,14 @@ namespace SuccessStory.Services
                         // Secure addition of providers
                         TryAddProvider(AchievementSource.GOG, () => new GogAchievements());
                         TryAddProvider(AchievementSource.Epic, () => new EpicAchievements());
-                        TryAddProvider(AchievementSource.Origin, () => new OriginAchievements());
+                        TryAddProvider(AchievementSource.EA, () => new EaAchievements());
                         TryAddProvider(AchievementSource.Overwatch, () => new OverwatchAchievements());
                         TryAddProvider(AchievementSource.Wow, () => new WowAchievements());
                         TryAddProvider(AchievementSource.Playstation, () => new PSNAchievements());
                         TryAddProvider(AchievementSource.RetroAchievements, () => new RetroAchievements());
                         TryAddProvider(AchievementSource.RPCS3, () => new Rpcs3Achievements());
+                        TryAddProvider(AchievementSource.ShadPS4, () => new ShadPS4Achievements());
+                        TryAddProvider(AchievementSource.Xbox360, () => new Xbox360Achievements());
                         TryAddProvider(AchievementSource.Starcraft2, () => new Starcraft2Achievements());
                         TryAddProvider(AchievementSource.Steam, () => new SteamAchievements());
                         TryAddProvider(AchievementSource.Xbox, () => new XboxAchievements());
@@ -87,33 +89,6 @@ namespace SuccessStory.Services
         {
             Plugin = plugin;
         }
-
-
-        protected override bool LoadDatabase()
-        {
-            try
-            {
-                Stopwatch stopWatch = new Stopwatch();
-                stopWatch.Start();
-
-                Database = new SuccessStoryCollection(Paths.PluginDatabasePath);
-                Database.SetGameInfo<Achievement>();
-
-                DeleteDataWithDeletedGame();
-
-                stopWatch.Stop();
-                TimeSpan ts = stopWatch.Elapsed;
-                Logger.Info($"LoadDatabase with {Database.Count} items - {string.Format("{0:00}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, ts.Milliseconds / 10)}");
-            }
-            catch (Exception ex)
-            {
-                Common.LogError(ex, false, true, PluginName);
-                return false;
-            }
-
-            return true;
-        }
-
 
         public void GetManual(Game game)
         {
@@ -152,7 +127,21 @@ namespace SuccessStory.Services
                 gameAchievements = Get(game, true);
                 if (gameAchievements != null && gameAchievements.HasData)
                 {
-                    if (gameAchievements.SourcesLink?.Name.IsEqual("steam") ?? false)
+					// eFMann - added Xbox360/Xenia
+					if (PlayniteTools.GameUseXbox360(game) && PluginSettings.Settings.EnableXbox360Achievements)
+					{
+						Xbox360Achievements xbox360Achievements = new Xbox360Achievements();
+						if (xbox360Achievements.IsConfigured())
+						{
+							gameAchievements = xbox360Achievements.GetAchievements(game);
+							if (gameAchievements?.HasAchievements ?? false)
+							{
+								return gameAchievements;
+							}
+						}
+					}
+
+					if (gameAchievements.SourcesLink?.Name.IsEqual("steam") ?? false)
                     {
                         string str = gameAchievements.SourcesLink?.Url.Replace("https://steamcommunity.com/stats/", string.Empty).Replace("/achievements", string.Empty);
                         if (uint.TryParse(str, out uint AppId))
@@ -171,8 +160,7 @@ namespace SuccessStory.Services
                             Url = gameAchievements.SourcesLink?.Url
                         };
 
-                        ExophaseAchievements exophaseAchievements = new ExophaseAchievements();
-                        gameAchievements = exophaseAchievements.GetAchievements(game, searchResult);
+                        gameAchievements = SuccessStory.ExophaseAchievements.GetAchievements(game, searchResult);
                     }
 
                     Common.LogDebug(true, $"RefreshManual({game.Id}) - gameAchievements: {Serialization.ToJson(gameAchievements)}");
@@ -333,7 +321,7 @@ namespace SuccessStory.Services
             else if (gameAchievements == null && game != null)
             {
                 gameAchievements = GetDefault(game);
-                Add(gameAchievements);
+                //Add(gameAchievements);
             }
 
             return gameAchievements;
@@ -488,7 +476,7 @@ namespace SuccessStory.Services
             Steam,
             GOG,
             Epic,
-            Origin,
+            EA,
             Xbox,
             RetroAchievements,
             RPCS3,
@@ -500,15 +488,21 @@ namespace SuccessStory.Services
             GameJolt,
             WutheringWaves,
             HonkaiStarRail,
-            ZenlessZoneZero
-        }
+            ZenlessZoneZero,
+			ShadPS4,
+			Xbox360
+		}
 
         private static AchievementSource GetAchievementSourceFromLibraryPlugin(SuccessStorySettings settings, Game game)
         {
             ExternalPlugin pluginType = PlayniteTools.GetPluginType(game.PluginId);
             if (pluginType == ExternalPlugin.None)
-            {
-                if (game.Source?.Name?.Contains("Xbox Game Pass", StringComparison.OrdinalIgnoreCase) ?? false)
+			{
+				if (settings.EnableXbox360Achievements && GameUseXbox360(game)) // eFMann - added Xbox350 source
+				{
+					return AchievementSource.Xbox360;
+				}
+				if (game.Source?.Name?.Contains("Xbox Game Pass", StringComparison.OrdinalIgnoreCase) ?? false)
                 {
                     return AchievementSource.Xbox;
                 }
@@ -575,7 +569,7 @@ namespace SuccessStory.Services
                 case ExternalPlugin.OriginLibrary:
                     if (settings.EnableOrigin)
                     {
-                        return AchievementSource.Origin;
+                        return AchievementSource.EA;
                     }
                     break;
 
@@ -594,7 +588,12 @@ namespace SuccessStory.Services
                     break;
 
                 case ExternalPlugin.XboxLibrary:
-                    if (settings.EnableXbox)
+                case ExternalPlugin.XCloud:
+					if (settings.EnableXbox360Achievements && GameUseXbox360(game)) // eFMann
+					{
+						return AchievementSource.Xbox360;
+					}
+					if (settings.EnableXbox)
                     {
                         return AchievementSource.Xbox;
                     }
@@ -645,48 +644,49 @@ namespace SuccessStory.Services
 
         private static AchievementSource GetAchievementSourceFromEmulator(SuccessStorySettings settings, Game game)
         {
-            AchievementSource achievementSource = AchievementSource.None;
-
-            if (game.GameActions == null)
+			// Priority 1: Check for RPCS3 or ShadPS4 or Xenia
+			if (settings.EnableRpcs3Achievements && PlayniteTools.GameUseRpcs3(game))
             {
-                return achievementSource;
+                return AchievementSource.RPCS3;
+            }
+			if (settings.EnableShadPS4Achievements && PlayniteTools.GameUseShadPS4(game))
+            {
+                return AchievementSource.ShadPS4;
+			}
+			if (settings.EnableXbox360Achievements && PlayniteTools.GameUseXbox360(game) )
+			{
+				return AchievementSource.Xbox360;
+			}
+
+			// Priority 2: Check if any game action is an emulator
+			bool hasEmulatorAction = game.GameActions.Any(action => action.Type == GameActionType.Emulator);
+            if (settings.EnableRetroAchievements && hasEmulatorAction)
+            {
+                return AchievementSource.RetroAchievements;
             }
 
-            foreach (GameAction action in game.GameActions)
+            // Priority 3: Check for RetroAchievements via platform
+            if (settings.EnableRetroAchievements && game.Platforms?.Count > 0)
             {
-                if (action.Type != GameActionType.Emulator)
+                var platform = game.Platforms.FirstOrDefault();
+                if (platform != null)
                 {
-                    continue;
-                }
-                else
-                {
-                    achievementSource = AchievementSource.RetroAchievements;
-                }
+                    int consoleID = settings.RaConsoleAssociateds
+                        .FirstOrDefault(x => x.Platforms.Any(y => y.Id == platform.Id))
+                        ?.RaConsoleId ?? 0;
 
-                if (PlayniteTools.GameUseRpcs3(game) && settings.EnableRpcs3Achievements)
-                {
-                    return AchievementSource.RPCS3;
-                }
-
-                // TODO With the emulator migration problem emulator.BuiltInConfigId is null
-                // TODO emulator.BuiltInConfigId = "retroarch" is limited; other emulators has RA
-                if (game.Platforms?.Count > 0)
-                {
-                    string PlatformName = game.Platforms.FirstOrDefault().Name;
-                    Guid PlatformId = game.Platforms.FirstOrDefault().Id;
-                    int consoleID = settings.RaConsoleAssociateds.Find(x => x.Platforms.Find(y => y.Id == PlatformId) != null)?.RaConsoleId ?? 0;
-                    if (settings.EnableRetroAchievements && consoleID != 0)
+                    if (consoleID != 0)
                     {
                         return AchievementSource.RetroAchievements;
                     }
                 }
-                else
-                {
-                    Logger.Warn($"No platform for {game.Name}");
-                }
+            }
+            else if (settings.EnableRetroAchievements && (game.Platforms == null || game.Platforms.Count == 0))
+            {
+                Logger.Warn($"GetAchievementSourceFromEmulator: No platform for {game.Name}");
             }
 
-            return achievementSource;
+            return AchievementSource.None;
         }
 
         public static AchievementSource GetAchievementSource(SuccessStorySettings settings, Game game, bool ignoreSpecial = false)
@@ -1011,7 +1011,6 @@ namespace SuccessStory.Services
                 IEnumerable<GameAchievements> db = Database.Where(x => x.IsManual && x.HasAchievements);
                 a.ProgressMaxValue = (double)db.Count();
 
-                ExophaseAchievements exophaseAchievements = new ExophaseAchievements();
                 SteamAchievements steamAchievements = new SteamAchievements();
                 bool SteamConfig = steamAchievements.IsConfigured();
 
@@ -1043,7 +1042,7 @@ namespace SuccessStory.Services
                                 break;
 
                             case "exophase":
-                                exophaseAchievements.SetRarety(gameAchievements, AchievementSource.Local);
+                                SuccessStory.ExophaseAchievements.SetRarety(gameAchievements, AchievementSource.Local);
                                 break;
 
                             default:
@@ -1088,7 +1087,6 @@ namespace SuccessStory.Services
                 IEnumerable<GameAchievements> db = Database.Where(x => x.IsManual && x.HasAchievements);
                 a.ProgressMaxValue = db.Count();
 
-                ExophaseAchievements exophaseAchievements = new ExophaseAchievements();
                 SteamAchievements steamAchievements = new SteamAchievements();
                 bool SteamConfig = steamAchievements.IsConfigured();
 

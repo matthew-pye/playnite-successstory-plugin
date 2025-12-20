@@ -380,13 +380,14 @@ namespace SuccessStory.Models
                 }
 
                 Achievement first = Items.FirstOrDefault();
-                if (first?.UrlUnlocked?.IndexOf("GenshinImpact", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    first?.UrlUnlocked?.IndexOf("rpcs3", StringComparison.OrdinalIgnoreCase) >= 0)
-                {
-                    return true;
-                }
+				if ((first?.UrlUnlocked?.IndexOf("genshinimpact", StringComparison.OrdinalIgnoreCase) >= 0) ||
+					(first?.UrlUnlocked?.IndexOf("rpcs3", StringComparison.OrdinalIgnoreCase) >= 0) ||
+					(first?.UrlUnlocked?.IndexOf("shadps4", StringComparison.OrdinalIgnoreCase) >= 0))
+				{
+					return true;
+				}
 
-                return Items.All(x => x.ImageUnlockedIsCached && x.ImageLockedIsCached);
+				return Items.All(x => x.ImageUnlockedIsCached && x.ImageLockedIsCached);
             }
         }
 

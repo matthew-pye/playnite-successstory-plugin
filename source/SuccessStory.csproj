@@ -87,6 +87,9 @@
       <HintPath>packages\AngleSharp.0.9.9\lib\net45\AngleSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Ardalis.GuardClauses, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Ardalis.GuardClauses.5.0.0\lib\netstandard2.0\Ardalis.GuardClauses.dll</HintPath>
+    </Reference>
     <Reference Include="FuzzySharp, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\FuzzySharp.2.0.2\lib\net461\FuzzySharp.dll</HintPath>
     </Reference>
@@ -101,8 +104,8 @@
     <Reference Include="MoreLinq, Version=3.3.2.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>packages\morelinq.3.3.2\lib\net451\MoreLinq.dll</HintPath>
     </Reference>
-    <Reference Include="Playnite.SDK, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\PlayniteSDK.6.11.0\lib\net462\Playnite.SDK.dll</HintPath>
+    <Reference Include="Playnite.SDK, Version=6.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\PlayniteSDK.6.13.0\lib\net462\Playnite.SDK.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -138,6 +141,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
@@ -158,6 +162,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\GameJoltAchievements.cs" />
+    <Compile Include="Clients\ShadPS4Achievements.cs" />
+    <Compile Include="Clients\Xbox360Achievements.cs" />
     <Compile Include="Clients\ZenlessZoneZeroAchievements.cs" />
     <Compile Include="Clients\HonkaiStarRailAchievements.cs" />
     <Compile Include="Clients\WutheringWavesAchievements.cs" />
@@ -205,6 +211,7 @@
     <Compile Include="Models\HonkaiStarRail\AchievementSeries.cs" />
     <Compile Include="Models\HonkaiStarRail\StairRailStationData.cs" />
     <Compile Include="Models\HonkaiStarRail\StairRailStationExport.cs" />
+    <Compile Include="Models\RarityCache.cs" />
     <Compile Include="Models\Stats\AchProgressionTotal.cs" />
     <Compile Include="Models\PSN\TropyTitlesResponse.cs" />
     <Compile Include="Models\RetroAchievements\RaConsole.cs" />
@@ -607,7 +614,7 @@
     <Compile Include="Clients\GenshinImpactAchievements.cs" />
     <Compile Include="Clients\GuildWars2Achievements.cs" />
     <Compile Include="Clients\GogAchievements.cs" />
-    <Compile Include="Clients\OriginAchievements.cs" />
+    <Compile Include="Clients\EaAchievements.cs" />
     <Compile Include="Clients\OverwatchAchievements.cs" />
     <Compile Include="Clients\PSNAchievements.cs" />
     <Compile Include="Clients\RetroAchievements.cs" />

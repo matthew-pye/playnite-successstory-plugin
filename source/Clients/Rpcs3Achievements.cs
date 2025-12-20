@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using CommonPluginsShared.Extensions;
 using Playnite.SDK;
@@ -143,7 +142,6 @@ namespace SuccessStory.Clients
 
                     foreach (string hexData in trophyHexData)
                     {
-
                         if (hexData.Length < 58)
                         {
                             continue;
@@ -193,8 +191,8 @@ namespace SuccessStory.Clients
             return gameAchievements;
         }
 
-
         #region Configuration
+
         public override bool ValidateConfiguration()
         {
             if (CachedConfigurationValidationResult == null)
@@ -213,7 +211,6 @@ namespace SuccessStory.Clients
 
             return (bool)CachedConfigurationValidationResult;
         }
-
 
         public override bool IsConfigured()
         {
@@ -238,10 +235,11 @@ namespace SuccessStory.Clients
         {
             return PluginDatabase.PluginSettings.Settings.EnableRpcs3Achievements;
         }
+
         #endregion
 
-
         #region RPCS3
+
         private List<string> FindTrophyGameFolder(Game game)
         {
             List<string> trophyGameFolder = new List<string>();
@@ -359,6 +357,7 @@ namespace SuccessStory.Clients
                 return string.Empty;
             }
         }
+
         #endregion
     }
 }

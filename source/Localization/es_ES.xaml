@@ -24,7 +24,7 @@
     <sys:String x:Key="LOCSuccessStoryNotIgnored">No se ha ignorado el juego</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryHiddenAchievement">Logro oculto</sys:String>
-    <sys:String x:Key="LOCSuccessStoryHideNoUnlockedGame">Hide games with no unlocked achievement</sys:String>
+    <sys:String x:Key="LOCSuccessStoryHideNoUnlockedGame">Ocultar juegos sin logros desbloqueados</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryNotificationsSteamPrivate">El perfil de Steam no es público</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsSteamGamePrivate" xml:space="preserve">El juego de Steam &quot;{0}&quot; no es público
@@ -39,17 +39,21 @@ Debes revisar &quot;{1}&quot; en la configuración del plugin</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsGogBadConfig">GOG no se ha configurado correctamente en la configuración</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsPsnDisabled">PSN está habilitado en SuccessStory pero la extensión de la biblioteca ha sido desactivada en Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsPsnNoAuthenticate">El usuario de PSN no está autenticado</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsOriginDisabled">EA está activado en SuccessStory pero la extensión de la biblioteca ha sido desactivada en Playnite</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsOriginNoAuthenticate">El usuario de EA no está autenticado</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsEaDisabled">EA está activado en SuccessStory pero la extensión de la biblioteca ha sido desactivada en Playnite</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsEaNoAuthenticate">El usuario de EA no está autenticado</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsXboxDisabled">Xbox está activado en SuccessStory pero la extensión de la biblioteca ha sido deshabilitada en Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsXboxNotAuthenticate">El usuario de Xbox no está autenticado</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsBadConfig">RetroAchievements no se han configurado correctamente en la configuración</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 no se ha configurado correctamente en la configuración</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net está habilitado en SuccessStory pero la extensión de la biblioteca ha sido desactivada en Playnite</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsNoConsoleId" xml:space="preserve">No ConsoleId find for {0} with platforms {1}.
+Associate the platform in the plugin settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 no se ha configurado correctamente en la configuración</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsShadPS4BadConfig">ShadPS4 has not been correctly configured in settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsXbox360BadConfig">Xbox360 Achievements have not been correctly configured in settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net está habilitado en SuccessStory pero la extensión de la biblioteca ha sido desactivada en Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticate">El usuario de Battle.net no está autenticado</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateOverwatch">El usuario de Overwatch de Battle.net no está autenticado</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateSc2">El usuario de Battle.net StarCraft II no está autenticado</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsGameJoltDisabled">Game Jolt is enabled in SuccessStory but the library extension has been disabled in Playnite</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsGameJoltDisabled">Game Jolt está activado en SuccessStory pero la extensión de la biblioteca ha sido desactivada en Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsEpicDisabled">Epic está activado en SuccessStory pero la extensión de la biblioteca ha sido desactivada en Playnite</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsEpicNoAuthenticate">El usuario de Epic no está autenticado</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsGw2BadConfig">Guild Wars2 no se ha configurado correctamente en la configuración</sys:String>
@@ -65,7 +69,7 @@ Debes revisar &quot;{1}&quot; en la configuración del plugin</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryIgnoredGames">Juegos ignorados</sys:String>
     
-    <sys:String x:Key="LOCSuccessStoryGroupSteamAchievements">Group Steam achievements</sys:String>
+    <sys:String x:Key="LOCSuccessStoryGroupSteamAchievements">Logros de Steam</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryExophaseOnlyLocalised">Exophase (solo para tener logros localizados)</sys:String>
 
@@ -79,21 +83,26 @@ Debes revisar &quot;{1}&quot; en la configuración del plugin</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableSteam">Habilitar logros de Steam</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableGog">Habilitar logros de GOG</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableEpic">Habilitar logros de Epic</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableOrigin">Habilitar logros de EA</sys:String>
+    <sys:String x:Key="LOCSuccessStoryEnableEa">Habilitar logros de EA</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableXbox">Habilitar logros de Xbox</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableRetroAchievements">Habilitar logros de RetroAchievements</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">Habilitar logros de RPCS3</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Habilitar logros manuales</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">Habilitar logros de RPCS3</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Achievements">Enable ShadPS4 achievements</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXbox360Achievements">Enable Xbox 360 achievements</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Habilitar logros manuales</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableOverwatchAchievements">Habilitar Logros de Overwatch</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableSc2Achievements">Habilitar logros de StarCraft II</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableWowAchievements">Activa los logros de World of Warcraft</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableGw2Achievements">Habilitar los logros de Guild Wars 2</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableGameJoltAchievements">Enable Game Jolt achievements</sys:String>
+    <sys:String x:Key="LOCSuccessStoryEnableGameJoltAchievements"></sys:String>
 
     <sys:String x:Key="LOCSuccessStorySteamNoApi">Desactivar el uso de la API (Usar cuando no tienes una clave API)</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Carpeta de usuario</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Carpeta de usuario</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-    <sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Mostrar vista separada para los logros de RetroAchievements</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia__canary.exe location</sys:String>
+
+	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Mostrar vista separada para los logros de RetroAchievements</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryDatabase">Base de datos</sys:String>
     <sys:String x:Key="LOCSuccessStoryGetData">Descargar datos de logros</sys:String>
@@ -188,7 +197,7 @@ Especialmente útil para los logros de Xbox con sus imágenes grandes que se red
 
     <!-- SuccessStoryOneGameView -->
 
-    <sys:String x:Key="LOCSuccessStoryBaseGame">Base game</sys:String>
+    <sys:String x:Key="LOCSuccessStoryBaseGame">Juego Base</sys:String>
     
     <sys:String x:Key="LOCSuccessStoryFirstUnlock">Primer desbloqueo</sys:String>
     <sys:String x:Key="LOCSuccessStoryLastUnlock">Último desbloqueo</sys:String>
@@ -228,22 +237,22 @@ Especialmente útil para los logros de Xbox con sus imágenes grandes que se red
 
     <!-- Genshin Impact -->
 
-    <sys:String x:Key="LOCEnableGenshinImpactAchievements">Enable Genshin Impact achievements</sys:String>
+    <sys:String x:Key="LOCEnableGenshinImpactAchievements">Habilitar logros de Genshin Impact</sys:String>
     <sys:String x:Key="LOCAddGenshinImpact">Añadir Genshin Impact</sys:String>
 
     <!-- Wuthering Waves -->
 
-    <sys:String x:Key="LOCEnableWutheringWavesAchievements">Enable Wuthering Waves achievements</sys:String>
-    <sys:String x:Key="LOCAddWutheringWaves">Add Wuthering Waves</sys:String>
+    <sys:String x:Key="LOCEnableWutheringWavesAchievements">Habilitar logros de Wuthering Waves</sys:String>
+    <sys:String x:Key="LOCAddWutheringWaves">Añadir Wuthering Waves</sys:String>
 
     <!-- Honkai Star Rail -->
 
-    <sys:String x:Key="LOCEnableHonkaiStarRailAchievements">Enable Honkai Star Rail achievements</sys:String>
-    <sys:String x:Key="LOCAddHonkaiStarRail">Add Honkai Star Rails</sys:String>
+    <sys:String x:Key="LOCEnableHonkaiStarRailAchievements">Habilitar logros de Honkai Star Rails</sys:String>
+    <sys:String x:Key="LOCAddHonkaiStarRail">Añadir Honkai Star Rails</sys:String>
 
     <!-- Zenless Zone Zero -->
 
-    <sys:String x:Key="LOCEnableZenlessZoneZeroAchievements">Enable Zenless Zone Zero achievements</sys:String>
+    <sys:String x:Key="LOCEnableZenlessZoneZeroAchievements">Habilitar logros de Zenless Zone Zero</sys:String>
     <sys:String x:Key="LOCAddZenlessZoneZero">Añadir Zenless Zone Zero</sys:String>
 
     <!-- Overwatch -->

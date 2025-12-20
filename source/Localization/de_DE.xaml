@@ -39,13 +39,17 @@ Du musst in den Plugin die Einstellungen &quot;{1}&quot; überprüfen</sys:Strin
     <sys:String x:Key="LOCSuccessStoryNotificationsGogBadConfig">GOG wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsPsnDisabled">PSN ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsPsnNoAuthenticate">PSN Benutzer ist nicht authentifiziert</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsOriginDisabled">EA ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsOriginNoAuthenticate">EA User ist nicht authentifiziert</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsEaDisabled">EA ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsEaNoAuthenticate">EA User ist nicht authentifiziert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsXboxDisabled">Xbox ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsXboxNotAuthenticate">Xbox Benutzer ist nicht authentifiziert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsBadConfig">RetroAchievements wurden in den Einstellungen nicht richtig konfiguriert</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
-    <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
+    <sys:String x:Key="LOCSuccessStoryNotificationsRetroAchievementsNoConsoleId" xml:space="preserve">Keine ConsoleId wurde für {0} mit den Plattformen {1} gefunden.
+Verknüpfen Sie die Plattform in den Plugin-Einstellungen</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsRpcs3BadConfig">RPCS3 wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsShadPS4BadConfig">ShadPS4 wurde in den Einstellungen nicht richtig konfiguriert</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsXbox360BadConfig">Xbox360 Achievements have not been correctly configured in settings</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotificationsBattleNetDisabled">Battle.net ist in SuccessStory aktiviert, aber die Bibliothekserweiterung wurde in Playnite deaktiviert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticate">Battle.net Benutzer ist nicht authentifiziert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateOverwatch">Battle.net Overwatch Benutzer ist nicht authentifiziert</sys:String>
     <sys:String x:Key="LOCSuccessStoryNotificationsBattleNetNoAuthenticateSc2">Battle.net StarCraft II Benutzer ist nicht authentifiziert</sys:String>
@@ -79,11 +83,13 @@ Du musst in den Plugin die Einstellungen &quot;{1}&quot; überprüfen</sys:Strin
     <sys:String x:Key="LOCSuccessStoryEnableSteam">Steam Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableGog">GOG Erfolge aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableEpic">Epic Errungenschaften aktivieren</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableOrigin">EA Errungenschaften aktivieren</sys:String>
+    <sys:String x:Key="LOCSuccessStoryEnableEa">EA Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableXbox">Xbox Erfolge aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableRetroAchievements">RetroAchievements Erfolge aktivieren</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">RPCS3 Erfolge aktivieren</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Manuelle Errungenschaften aktivieren</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3Achievements">RPCS3 Erfolge aktivieren</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Achievements">ShadPS4 Errungenschaften aktivieren</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXbox360Achievements">Xbox360 Erfolge aktivieren</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableManualAchievements">Manuelle Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableOverwatchAchievements">Overwatch Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableSc2Achievements">StarCraft II Errungenschaften aktivieren</sys:String>
     <sys:String x:Key="LOCSuccessStoryEnableWowAchievements">World of Warcraft Errungenschaften aktivieren</sys:String>
@@ -91,9 +97,12 @@ Du musst in den Plugin die Einstellungen &quot;{1}&quot; überprüfen</sys:Strin
     <sys:String x:Key="LOCSuccessStoryEnableGameJoltAchievements">Game Jolt Erfolge aktivieren</sys:String>
 
     <sys:String x:Key="LOCSuccessStorySteamNoApi">API Nutzung deaktivieren (Verwenden Sie dies, wenn Sie keinen API Schlüssel haben)</sys:String>
-    <sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Benutzerverzeichnis</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Benutzerverzeichnis</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 Benutzerordner</sys:String>
 
-    <sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Separate Ansicht für RetroAchievements anzeigen</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia__canary.exe Dateistandort</sys:String>
+
+	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Separate Ansicht für RetroAchievements anzeigen</sys:String>
 
     <sys:String x:Key="LOCSuccessStoryDatabase">Datenbank</sys:String>
     <sys:String x:Key="LOCSuccessStoryGetData">Errungenschaftsdaten herunterladen</sys:String>
@@ -233,18 +242,18 @@ Besonders nützlich für Xbox Errungenschaften mit ihren großen Bildern, die be
 
     <!-- Wuthering Waves -->
 
-    <sys:String x:Key="LOCEnableWutheringWavesAchievements">Enable Wuthering Waves achievements</sys:String>
-    <sys:String x:Key="LOCAddWutheringWaves">Add Wuthering Waves</sys:String>
+    <sys:String x:Key="LOCEnableWutheringWavesAchievements">Wuthering Waves Errungenschaften aktivieren</sys:String>
+    <sys:String x:Key="LOCAddWutheringWaves">Wuthering Waves hinzufügen</sys:String>
 
     <!-- Honkai Star Rail -->
 
-    <sys:String x:Key="LOCEnableHonkaiStarRailAchievements">Enable Honkai Star Rail achievements</sys:String>
-    <sys:String x:Key="LOCAddHonkaiStarRail">Add Honkai Star Rails</sys:String>
+    <sys:String x:Key="LOCEnableHonkaiStarRailAchievements">Honkai Star Rail Errungenschaften aktivieren</sys:String>
+    <sys:String x:Key="LOCAddHonkaiStarRail">Füge Honkai Star Rails Errungenschaften hinzu</sys:String>
 
     <!-- Zenless Zone Zero -->
 
-    <sys:String x:Key="LOCEnableZenlessZoneZeroAchievements">Enable Zenless Zone Zero achievements</sys:String>
-    <sys:String x:Key="LOCAddZenlessZoneZero">Add Zenless Zone Zero</sys:String>
+    <sys:String x:Key="LOCEnableZenlessZoneZeroAchievements">Zenless Zone Null Errungenschaften aktivieren</sys:String>
+    <sys:String x:Key="LOCAddZenlessZoneZero">Zenless Zone Null Errungenschaften hinzufügen</sys:String>
 
     <!-- Overwatch -->
 

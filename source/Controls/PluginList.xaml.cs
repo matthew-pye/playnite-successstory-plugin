@@ -25,10 +25,10 @@ namespace SuccessStory.Controls
     public partial class PluginList : PluginUserControlExtend
     {
         private SuccessStoryDatabase PluginDatabase => SuccessStory.PluginDatabase;
-        internal override IPluginDatabase pluginDatabase => PluginDatabase;
+        protected override IPluginDatabase pluginDatabase => PluginDatabase;
 
         private PluginListDataContext ControlDataContext = new PluginListDataContext();
-        internal override IDataContext controlDataContext
+        protected override IDataContext controlDataContext
         {
             get => ControlDataContext;
             set => ControlDataContext = (PluginListDataContext)controlDataContext;
@@ -52,6 +52,7 @@ namespace SuccessStory.Controls
 
 
         #region Properties
+
         public static readonly DependencyProperty ForceOneColProperty;
         public bool ForceOneCol { get; set; } = false;
 
@@ -60,6 +61,19 @@ namespace SuccessStory.Controls
 
         public static readonly DependencyProperty DisplayFilterProperty;
         public bool DisplayFilter { get; set; } = false;
+
+        public bool ShowHardcore
+        {
+            get => (bool)GetValue(ShowHardcoreProperty);
+            set => SetValue(ShowHardcoreProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowHardcoreProperty = DependencyProperty.Register(
+            nameof(ShowHardcore),
+            typeof(bool),
+            typeof(PluginList),
+            new FrameworkPropertyMetadata(false, ControlsPropertyChangedCallback));
+
         #endregion
 
 
@@ -210,8 +224,7 @@ namespace SuccessStory.Controls
             LbAchievements_SizeChanged(null, null);
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
             if (UsedCategory)
             {
@@ -219,7 +232,7 @@ namespace SuccessStory.Controls
                 return;
             }
 
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
             gameAchievements.OrderAchievement = PluginDatabase.PluginSettings.Settings.IntegrationListOrderAchievement;
 
             if (!gameAchievements.Items.FirstOrDefault().CategoryRpcs3.IsNullOrEmpty())
@@ -239,12 +252,13 @@ namespace SuccessStory.Controls
             {
                 ControlDataContext.ItemsSource = gameAchievements.OrderItems;
             }
+
+            UpdateHardcoreMode(ShowHardcore);
         }
 
-
-        public void SetDataCategory(string CategoryName)
+        public void SetDataCategory(string categoryName)
         {
-            this.CategoryName = CategoryName;
+            this.CategoryName = categoryName;
             if (GameContext == null)
             {
                 return;
@@ -253,12 +267,12 @@ namespace SuccessStory.Controls
             GameAchievements gameAchievements = PluginDatabase.Get(GameContext, true);
             gameAchievements.OrderAchievement = OrderAchievement;
 
-            ObservableCollection<Achievement> achievements = gameAchievements.OrderItems.Where(x => x.Category.IsEqual(CategoryName)).ToObservable();
+            ObservableCollection<Achievement> achievements = gameAchievements.OrderItems.Where(x => x.Category.IsEqual(categoryName)).ToObservable();
             ControlDataContext.ItemsSource = achievements;
         }
 
-
         #region Events
+
         private void LbAchievements_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (ControlDataContext != null)
@@ -271,7 +285,6 @@ namespace SuccessStory.Controls
                 DataContext = ControlDataContext;
             }
         }
-
 
         private void PART_TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -290,10 +303,11 @@ namespace SuccessStory.Controls
             }
             catch { }
         }
+
         #endregion
 
-
         #region Filter
+
         private void PART_SortName_Click(object sender, RoutedEventArgs e)
         {
             if (PART_SortName.Content.ToString() == NameAsc)
@@ -349,7 +363,7 @@ namespace SuccessStory.Controls
             SetOrder(GameName);
         }
 
-    
+
         private void ChangeIndex()
         {
             NameIndex++;
@@ -375,7 +389,7 @@ namespace SuccessStory.Controls
         }
 
 
-        private void SetOrder(string GameName = "")
+        private void SetOrder(string gameName = "")
         {
             OrderAchievement.OrderGroupByUnlocked = (bool)PART_SortGroupBy.IsChecked;
 
@@ -453,12 +467,30 @@ namespace SuccessStory.Controls
                     achievements = achievements.Where(x => x.Category.IsEqual(CategoryName)).ToObservable();
                 }
 
-                ControlDataContext.ItemsSource = GameName.IsNullOrEmpty()
+                ControlDataContext.ItemsSource = gameName.IsNullOrEmpty()
                     ? achievements
-                    : achievements.Where(x => x.CategoryRpcs3.IsEqual(GameName)).ToObservable();
+                    : achievements.Where(x => x.CategoryRpcs3.IsEqual(gameName)).ToObservable();
             }
         }
+
         #endregion
+
+        private void UpdateHardcoreMode(bool showHardcore)
+        {
+            if (ControlDataContext?.ItemsSource == null)
+            {
+                return;
+            }
+
+            var updatedList = ControlDataContext.ItemsSource.Select(x =>
+            {
+                x.ShowHardcore = showHardcore;
+                return x;
+            }).ToList();
+
+            ControlDataContext.ItemsSource = new ObservableCollection<Achievement>(updatedList);
+            SetOrder(GameName);
+        }
     }
 
 

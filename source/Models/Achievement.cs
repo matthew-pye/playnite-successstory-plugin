@@ -24,14 +24,15 @@ namespace SuccessStory.Models
         /// </summary>
         private SuccessStoryDatabase PluginDatabase => SuccessStory.PluginDatabase;
 
-
         private string _name;
+
         /// <summary>
         /// Gets or sets the localized name of the achievement.
         /// </summary>
         public string Name { get => _name; set => _name = value?.Trim(); }
 
         private string _nameEn;
+
         /// <summary>
         /// Gets or sets the English name of the achievement.
         /// </summary>
@@ -57,15 +58,34 @@ namespace SuccessStory.Models
         /// </summary>
         public string UrlLocked { get; set; }
 
-        // TODO
         private DateTime? _dateUnlocked;
+
         /// <summary>
         /// Gets or sets the date and time when the achievement was unlocked.
+        /// Converts to local time when reading, and ensures UTC storage when setting.
+        /// If the provided value is DateTime.MinValue, it is treated as null.
         /// </summary>
         public DateTime? DateUnlocked
         {
-            get => _dateUnlocked == default(DateTime) ? null : _dateUnlocked;
-            set => _dateUnlocked = value is DateTime dt ? dt.ToUniversalTime() : value;
+            get
+            {
+                if (_dateUnlocked.HasValue && _dateUnlocked.Value == DateTime.MinValue)
+                {
+                    return null;
+                }
+                return _dateUnlocked?.ToLocalTime();
+            }
+            set
+            {
+                if (!value.HasValue || value.Value == default)
+                {
+                    _dateUnlocked = null;
+                }
+                else
+                {
+                    _dateUnlocked = value.Value.ToUniversalTime();
+                }
+            }
         }
 
         /// <summary>
@@ -121,6 +141,34 @@ namespace SuccessStory.Models
         /// </summary>
         public string CategoryRpcs3 { get; set; } = string.Empty;
 
+        public string CategoryShadPS4 { get; set; } = string.Empty;
+
+        [DontSerialize]
+        public bool IsRaHardCore => DateUnlockedRaHardCore != null;
+
+        public DateTime? DateUnlockedRaHardCore { get; set; }
+
+        private bool _showHardcore = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use hardcore unlock date instead of normal unlock date.
+        /// </summary>
+        [DontSerialize]
+        public bool ShowHardcore
+        {
+            get => _showHardcore;
+            set => SetValue(ref _showHardcore, value);
+        }
+
+        /// <summary>
+        /// Gets the effective unlock date based on ShowHardcore flag.
+        /// </summary>
+        [DontSerialize]
+        private DateTime? EffectiveDateUnlocked => ShowHardcore ? DateUnlockedRaHardCore : DateUnlocked;
+
+        /// <summary>
+        /// List of local resource games for image path resolution.
+        /// </summary>
         private static string[] LocalResourceGames => new[]
         {
             "rpcs3", "hidden_trophy", "GenshinImpact", "WutheringWaves", "HonkaiStarRail", "ZenlessZoneZero", "default_icon"
@@ -136,6 +184,11 @@ namespace SuccessStory.Models
             {
                 string tempUrlUnlocked = UrlUnlocked;
                 if (tempUrlUnlocked?.Contains("rpcs3", StringComparison.InvariantCultureIgnoreCase) ?? false)
+                {
+                    tempUrlUnlocked = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, UrlUnlocked);
+                    return tempUrlUnlocked;
+                }
+                if (tempUrlUnlocked?.Contains("shadps4", StringComparison.InvariantCultureIgnoreCase) ?? false)
                 {
                     tempUrlUnlocked = Path.Combine(PluginDatabase.Paths.PluginUserDataPath, UrlUnlocked);
                     return tempUrlUnlocked;
@@ -320,24 +373,30 @@ namespace SuccessStory.Models
         /// Gets a value indicating whether the achievement is unlocked.
         /// </summary>
         [DontSerialize]
-        public bool IsUnlock => DateWhenUnlocked != null || DateUnlocked.ToString().Contains("1982");
+		public bool IsUnlock => DateWhenUnlocked != null || EffectiveDateUnlocked?.Year == 1982;
 
-        private bool isVisible = true;
+		private bool _isVisible = true;
+
         /// <summary>
         /// Gets or sets a value indicating whether the achievement is visible in the UI.
         /// </summary>
         [DontSerialize]
-        public bool IsVisible { get => isVisible; set => SetValue(ref isVisible, value); }
+        public bool IsVisible { get => _isVisible; set => SetValue(ref _isVisible, value); }
 
         /// <summary>
         /// Gets or sets the local date and time when the achievement was unlocked, or null if not unlocked.
+        /// Uses hardcore date if ShowHardcore is true.
         /// </summary>
         [DontSerialize]
         public DateTime? DateWhenUnlocked
         {
-            get => DateUnlocked == null || DateUnlocked == default || DateUnlocked.ToString().Contains("0001") || DateUnlocked.ToString().Contains("1982")
+            get
+            {
+                DateTime? effectiveDate = EffectiveDateUnlocked;
+                return effectiveDate == null || effectiveDate.Value.Year == 0001 || effectiveDate.Value.Year == 1982
                     ? null
-                    : (DateTime?)((DateTime)DateUnlocked).ToLocalTime();
+                    : (DateTime?)((DateTime)effectiveDate).ToLocalTime();
+            }
             set => DateUnlocked = value;
         }
 

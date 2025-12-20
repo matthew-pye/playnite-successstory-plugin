@@ -38,12 +38,11 @@ namespace SuccessStory.Views
 
         private SuccessStoryDatabase PluginDatabase => SuccessStory.PluginDatabase;
 
-        private ExophaseAchievements ExophaseAchievements { get; set; } = new ExophaseAchievements();
-
         public static List<Folder> LocalPath { get; set; } = new List<Folder>();
         public static List<Folder> Rpcs3Path { get; set; } = new List<Folder>();
+		public static List<Folder> ShadPS4Path { get; set; } = new List<Folder>();
 
-        private List<GameAchievements> IgnoredGames { get; set; }
+		private List<GameAchievements> IgnoredGames { get; set; }
 
         public static bool WithoutMessage { get; set; } = false;
 
@@ -108,9 +107,16 @@ namespace SuccessStory.Views
                     PART_ItemsRpcs3Folder.Visibility = Visibility.Visible;
                 }
 
+				ShadPS4Path = Serialization.GetClone(PluginDatabase.PluginSettings.Settings.ShadPS4InstallationFolders);
+				PART_ItemsShadPS4Folder.ItemsSource = ShadPS4Path;
+				if (ShadPS4Path.Count > 0)
+				{
+					PART_ItemsShadPS4Folder.Visibility = Visibility.Visible;
+				}
 
-                // Set ignored game
-                IgnoredGames = Serialization.GetClone(PluginDatabase.Database.Where(x => x.IsIgnored).ToList());
+
+				// Set ignored game
+				IgnoredGames = Serialization.GetClone(PluginDatabase.Database.Where(x => x.IsIgnored).ToList());
                 IgnoredGames.Sort((x, y) => x.Name.CompareTo(y.Name));
                 PART_IgnoredGames.ItemsSource = IgnoredGames;
 
@@ -169,6 +175,7 @@ namespace SuccessStory.Views
 
 
         #region Tag
+
         private void ButtonAddTag_Click(object sender, RoutedEventArgs e)
         {
             PluginDatabase.AddTagAllGame();
@@ -178,17 +185,19 @@ namespace SuccessStory.Views
         {
             PluginDatabase.RemoveTagAllGame();
         }
+
         #endregion
 
-
         #region Exophase
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             lIsAuth.Content = ResourceProvider.GetString("LOCCommonLoginChecking");
 
             try
             {
-                ExophaseAchievements.Login();
+                SuccessStory.ExophaseAchievements.ResetCachedIsConnectedResult();
+                SuccessStory.ExophaseAchievements.Login();
 
                 Task task = Task.Run(() => CheckLogged())
                     .ContinueWith(antecedent =>
@@ -207,12 +216,13 @@ namespace SuccessStory.Views
 
         private bool CheckLogged()
         {
-            return ExophaseAchievements.IsConnected();
+            return SuccessStory.ExophaseAchievements.IsConnected();
         }
+
         #endregion
 
-
         #region Local
+
         private void ButtonAddLocalFolder_Click(object sender, RoutedEventArgs e)
         {
             PART_ItemsControl.ItemsSource = null;
@@ -220,32 +230,90 @@ namespace SuccessStory.Views
             PART_ItemsControl.ItemsSource = LocalPath;
         }
 
-        private void ButtonSelectLocalFolder_Click(object sender, RoutedEventArgs e)
-        {
-            int indexFolder = int.Parse(((Button)sender).Tag.ToString());
+		private void ButtonSelectLocalFolder_Click(object sender, RoutedEventArgs e)
+		{
+			int indexFolder = int.Parse(((Button)sender).Tag.ToString());
 
-            string SelectedFolder = API.Instance.Dialogs.SelectFolder();
-            if (!SelectedFolder.IsNullOrEmpty())
-            {
-                PART_ItemsControl.ItemsSource = null;
-                LocalPath[indexFolder].FolderPath = SelectedFolder;
-                PART_ItemsControl.ItemsSource = LocalPath;
-            }
-        }
+			string selectedFolder = API.Instance.Dialogs.SelectFolder();
+			if (!selectedFolder.IsNullOrEmpty())
+			{
+				if (IsValidAchievementFolder(selectedFolder))
+				{
+					PART_ItemsControl.ItemsSource = null;
+					LocalPath[indexFolder].FolderPath = selectedFolder;
+					PART_ItemsControl.ItemsSource = LocalPath;
+				}
+				else
+				{
+					API.Instance.Dialogs.ShowMessage(
+						"Select a folder which contains SteamAppID folder(s)\nFor Ali213 and Valve select a folder where the ALI213.ini or valve.ini file is located",
+						"Invalid Achievement Folder",
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+				}
+			}
+		}
 
-        private void ButtonRemoveLocalFolder_Click(object sender, RoutedEventArgs e)
+		private void DefaultDirs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (sender is ComboBox comboBox && comboBox.SelectedItem is ComboBoxItem selectedItem)
+			{
+				string selectedPath = selectedItem.Content.ToString();
+
+				// Resolve environment variables in the path
+				selectedPath = Environment.ExpandEnvironmentVariables(selectedPath);
+
+				if (IsValidAchievementFolder(selectedPath))
+				{
+					PART_ItemsControl.ItemsSource = null;
+					LocalPath.Add(new Folder { FolderPath = selectedPath });
+					PART_ItemsControl.ItemsSource = LocalPath;
+				}
+				else
+				{
+					API.Instance.Dialogs.ShowMessage(
+						"The selected default directory does not contain the required files or folders.\nPlease verify the path or select a different directory.",
+						"Invalid Achievement Folder",
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+
+					comboBox.SelectedIndex = -1; // Clear selection
+				}
+			}
+		}
+
+		private void ButtonRemoveLocalFolder_Click(object sender, RoutedEventArgs e)
         {
             int indexFolder = int.Parse(((Button)sender).Tag.ToString());
 
             PART_ItemsControl.ItemsSource = null;
             LocalPath.RemoveAt(indexFolder);
             PART_ItemsControl.ItemsSource = LocalPath;
-        }
-        #endregion
+		}
 
+		private bool IsValidAchievementFolder(string folderPath)
+		{
+			if (string.IsNullOrEmpty(folderPath) || !Directory.Exists(folderPath))
+				return false;
 
-        #region Rarity configuration
-        private void BtPickColor_Click(object sender, RoutedEventArgs e)
+			// Check for SteamAppId subfolders
+			bool hasSteamAppIdFolders = Directory.GetDirectories(folderPath)
+				.Any(dir => int.TryParse(Path.GetFileName(dir), out _));
+
+			// Check for ALI213.ini
+			bool hasAli213File = File.Exists(Path.Combine(folderPath, "ALI213.ini"));
+
+			// Check for valve.ini
+			bool hasValveFile = File.Exists(Path.Combine(folderPath, "valve.ini"));
+
+			return hasSteamAppIdFolders || hasAli213File || hasValveFile;
+		}
+
+		#endregion
+
+		#region Rarity configuration
+
+		private void BtPickColor_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -348,6 +416,7 @@ namespace SuccessStory.Views
         {
             PART_SlidderRare.Minimum = PART_SlidderUltraRare.Value;
         }
+
         #endregion
 
 
@@ -362,12 +431,10 @@ namespace SuccessStory.Views
             PART_IgnoredGames.ItemsSource = IgnoredGames;
         }
 
-
         private void PART_CbCompletation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CompletionStatus = (CompletionStatus)PART_CbCompletation.SelectedItem;
         }
-
 
         private void Button_RefreshWowRealm(object sender, RoutedEventArgs e)
         {
@@ -377,6 +444,7 @@ namespace SuccessStory.Views
 
 
         #region Unlocked icon configuration
+
         private void PART_RemoveCustomIcon_Click(object sender, RoutedEventArgs e)
         {
             PART_IconUnlocked.Source = null;
@@ -406,10 +474,11 @@ namespace SuccessStory.Views
             Hyperlink link = (Hyperlink)sender;
             Process.Start((string)link.Tag);
         }
+
         #endregion
 
-
         #region RPCS3 folders
+
         private void ButtonAddRpcs3Folder_Click(object sender, RoutedEventArgs e)
         {
             PART_ItemsRpcs3Folder.Visibility = Visibility.Visible;
@@ -444,11 +513,153 @@ namespace SuccessStory.Views
                 PART_ItemsRpcs3Folder.Visibility = Visibility.Collapsed;
             }
         }
-        #endregion
-    }
+
+		#endregion
+
+		#region ShadPS4 folders
+
+		private void ButtonAddShadPS4Folder_Click(object sender, RoutedEventArgs e)
+		{
+			PART_ItemsShadPS4Folder.Visibility = Visibility.Visible;
+			PART_ItemsShadPS4Folder.ItemsSource = null;
+			ShadPS4Path.Add(new Folder { FolderPath = "" });
+			PART_ItemsShadPS4Folder.ItemsSource = ShadPS4Path;
+		}
+
+		private void ButtonSelectShadPS4Folder_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				string selectedFolder = API.Instance.Dialogs.SelectFolder();
+				if (!selectedFolder.IsNullOrEmpty())
+				{
+					if (Directory.Exists(selectedFolder))
+					{
+						// Look for ShadPS4's specific path structure
+						string userGameDataPath = Path.Combine(selectedFolder, "user", "game_data");
+						if (!Directory.Exists(userGameDataPath))
+						{
+							Logger.Warn($"No valid ShadPS4 game_data folder found in {selectedFolder}");
+							API.Instance.Dialogs.ShowMessage(
+								"Selected folder must be the ShadPS4 installation directory containing 'user/game_data' path",
+								"Invalid Folder",
+								MessageBoxButton.OK,
+								MessageBoxImage.Warning
+							);
+							return;
+						}
+
+						// Verify we can find at least one game with trophy data
+						bool hasTrophyData = Directory.GetDirectories(userGameDataPath)
+							.Any(titleDir => Directory.Exists(Path.Combine(titleDir, "trophyfiles")));
+
+						if (!hasTrophyData)
+						{
+							Logger.Warn($"No trophy data found in any game folder in {selectedFolder}");
+							API.Instance.Dialogs.ShowMessage(
+								"No trophy data found in the selected folder. Make sure games with trophies have been run at least once.",
+								"No Trophy Data",
+								MessageBoxButton.OK,
+								MessageBoxImage.Warning
+							);
+							return;
+						}
+
+						PART_ShadPS4Folder.Text = selectedFolder;
+						PluginDatabase.PluginSettings.Settings.ShadPS4InstallationFolder = selectedFolder;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Common.LogError(ex, false, true, PluginDatabase.PluginName);
+			}
+		}
+
+		private void ButtonRemoveShadPS4Folder_Click(object sender, RoutedEventArgs e)
+		{
+			int indexFolder = int.Parse(((Button)sender).Tag.ToString());
+
+			PART_ItemsShadPS4Folder.ItemsSource = null;
+			ShadPS4Path.RemoveAt(indexFolder);
+			PART_ItemsShadPS4Folder.ItemsSource = ShadPS4Path;
+
+			if (ShadPS4Path.Count == 0)
+			{
+				PART_ItemsShadPS4Folder.Visibility = Visibility.Collapsed;
+			}
+		}
+
+		#endregion
+
+		#region Xenia folders
+
+		private void ButtonAddXeniaFolder_Click(object sender, RoutedEventArgs e)
+		{
+			string selectedFolder = API.Instance.Dialogs.SelectFolder();
+			if (!selectedFolder.IsNullOrEmpty())
+			{
+				string xeniaExe = Path.Combine(selectedFolder, "xenia_canary.exe");
+				if (File.Exists(xeniaExe))
+				{
+					selectedFolder = selectedFolder.TrimEnd('\\') + '\\'; // Add trailing slash
+					PART_XeniaFolder.Text = selectedFolder;
+					PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder = selectedFolder;
+					// Initialize Xbox360 achievements environment
+					try
+					{
+						var xbox360Achievements = new Xbox360Achievements(API.Instance, PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder);
+						xbox360Achievements.InitializeXeniaEnvironment(xeniaExe);
+					}
+					catch (Exception ex)
+					{
+						Common.LogError(ex, false, true, PluginDatabase.PluginName);
+						API.Instance.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOCSuccessStoryXeniaInitError"), "Success Story");
+					}
+				}
+				else
+				{
+					API.Instance.Dialogs.ShowMessage(
+						ResourceProvider.GetString("LOCSuccessStoryXeniaExeNotFound"),
+						"Success Story",
+						MessageBoxButton.OK,
+						MessageBoxImage.Warning);
+				}
+			}
+		}
+
+		private void ButtonSelectXeniaFolder_Click(object sender, RoutedEventArgs e)
+		{
+			var dialog = new Microsoft.Win32.OpenFileDialog
+			{
+				Filter = "Xenia Canary|xenia_canary.exe",
+				Title = ResourceProvider.GetString("LOCSuccessStorySelectXeniaExe")
+			};
+			if (dialog.ShowDialog() == true)
+			{
+				string xeniaFolder = Path.GetDirectoryName(dialog.FileName);
+				xeniaFolder = xeniaFolder.TrimEnd('\\') + '\\'; // Add trailing slash
+				PART_XeniaFolder.Text = xeniaFolder;
+				PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder = xeniaFolder;
+				// Initialize Xbox360 achievements environment
+				try
+				{
+					var xbox360Achievements = new Xbox360Achievements(API.Instance, PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder);
+					xbox360Achievements.InitializeXeniaEnvironment(dialog.FileName);
+				}
+				catch (Exception ex)
+				{
+					Common.LogError(ex, false, true, PluginDatabase.PluginName);
+					API.Instance.Dialogs.ShowErrorMessage(ResourceProvider.GetString("LOCSuccessStoryXeniaInitError"), "Success Story");
+				}
+			}
+		}
+
+		#endregion
+	}
 
 
-    public class BooleanAndConverter : IMultiValueConverter
+	public class BooleanAndConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

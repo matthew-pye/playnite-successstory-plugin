@@ -9,7 +9,6 @@ using System;
 using System.Linq;
 using Playnite.SDK.Models;
 using CommonPluginsShared.Plugins;
-using CommonPluginsStores;
 using CommonPluginsStores.Models;
 
 namespace SuccessStory
@@ -141,9 +140,21 @@ namespace SuccessStory
         public bool EnableEpic { get; set; } = false;
         public bool EnableOrigin { get; set; } = false;
         public bool EnableXbox { get; set; } = false;
+
         public bool EnableRetroAchievements { get; set; } = false;
         public bool EnableRpcs3Achievements { get; set; } = false;
-        public bool EnableGameJolt { get; set; } = false;
+		public string Rpcs3InstallationFolder { get; set; } = string.Empty;
+		public List<Folder> Rpcs3InstallationFolders { get; set; } = new List<Folder>();
+
+		public bool EnableShadPS4Achievements { get; set; } = false;
+		public string ShadPS4InstallationFolder { get; set; } = string.Empty;
+		public List<Folder> ShadPS4InstallationFolders { get; set; } = new List<Folder>();
+
+		public bool EnableXbox360Achievements { get; set; } = false;
+		public string XeniaInstallationFolder { get; set; } = string.Empty;
+		public List<Folder> XeniaInstallationFolders { get; set; } = new List<Folder>();
+
+		public bool EnableGameJolt { get; set; } = false;
 
         public bool EnableOverwatchAchievements { get; set; } = false;
         public bool EnableSc2Achievements { get; set; } = false;
@@ -153,9 +164,6 @@ namespace SuccessStory
         private List<CbData> wowRealms = new List<CbData>();
         public List<CbData> WowRealms { get => wowRealms; set => SetValue(ref wowRealms, value); }
         public string WowCharacter { get; set; } = string.Empty;
-
-        public string Rpcs3InstallationFolder { get; set; } = string.Empty;
-        public List<Folder> Rpcs3InstallationFolders { get; set; } = new List<Folder>();
 
         public bool EnableRetroAchievementsView { get; set; } = false;
         public bool EnableOneGameView { get; set; } = true;
@@ -367,39 +375,11 @@ namespace SuccessStory
             });
 
 
-            // TODO
             // StoreAPI intialization
-            SuccessStory.SteamApi.StoreSettings = Settings.SteamStoreSettings;
-            if (Settings.EnableSteam)
-            {
-                SuccessStory.SteamApi.SaveCurrentUser();
-                SuccessStory.SteamApi.CurrentAccountInfos = null;
-                _ = SuccessStory.SteamApi.CurrentAccountInfos;
-            }
-
-            SuccessStory.EpicApi.StoreSettings = Settings.EpicStoreSettings;
-            if (Settings.EnableEpic)
-            {
-                SuccessStory.EpicApi.SaveCurrentUser();
-                SuccessStory.EpicApi.CurrentAccountInfos = null;
-                _ = SuccessStory.EpicApi.CurrentAccountInfos;
-            }
-
-            SuccessStory.GogApi.StoreSettings = Settings.GogStoreSettings;
-            if (Settings.EnableGog)
-            {
-                SuccessStory.GogApi.SaveCurrentUser();
-                SuccessStory.GogApi.CurrentAccountInfos = null;
-                _ = SuccessStory.GogApi.CurrentAccountInfos;
-            }
-
-            SuccessStory.GameJoltApi.StoreSettings = Settings.GameJoltStoreSettings;
-            if (Settings.EnableGameJolt)
-            {
-                SuccessStory.GameJoltApi.SaveCurrentUser();
-                SuccessStory.GameJoltApi.CurrentAccountInfos = null;
-                _ = SuccessStory.GameJoltApi.CurrentAccountInfos;
-            }
+            SuccessStory.SteamApi.SaveSettings(Settings.SteamStoreSettings, Settings.PluginState.SteamIsEnabled && Settings.EnableSteam);
+            SuccessStory.EpicApi.SaveSettings(Settings.EpicStoreSettings, Settings.PluginState.EpicIsEnabled && Settings.EnableEpic);
+            SuccessStory.GogApi.SaveSettings(Settings.GogStoreSettings, Settings.PluginState.GogIsEnabled && Settings.EnableGog);
+            SuccessStory.GameJoltApi.SaveSettings(Settings.GameJoltStoreSettings, Settings.PluginState.GameJoltIsEnabled && Settings.EnableGameJolt);
 
 
             Plugin.SavePluginSettings(Settings);

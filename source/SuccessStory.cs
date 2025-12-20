@@ -1,45 +1,49 @@
-﻿using Playnite.SDK;
+﻿using CommonPlayniteShared.Common;
+using CommonPluginsShared;
+using CommonPluginsShared.Controls;
+using CommonPluginsShared.Extensions;
+using CommonPluginsShared.PlayniteExtended;
+using CommonPluginsStores.Epic;
+using CommonPluginsStores.GameJolt;
+using CommonPluginsStores.Gog;
+using CommonPluginsStores.Steam;
+using Playnite.SDK;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
-using CommonPluginsShared;
+using QuickSearch.SearchItems;
+using SuccessStory.Clients;
+using SuccessStory.Controls;
 using SuccessStory.Models;
+using SuccessStory.Models.RetroAchievements;
+using SuccessStory.Services;
 using SuccessStory.Views;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using SuccessStory.Services;
 using System.Windows.Automation;
-using CommonPluginsShared.PlayniteExtended;
-using CommonPluginsShared.Controls;
-using SuccessStory.Controls;
-using CommonPlayniteShared.Common;
-using System.Reflection;
-using CommonPluginsShared.Extensions;
-using System.Diagnostics;
-using QuickSearch.SearchItems;
-using CommonPluginsStores.Steam;
-using SuccessStory.Clients;
-using SuccessStory.Models.RetroAchievements;
-using CommonPluginsStores.Epic;
-using CommonPluginsStores.Gog;
-using CommonPluginsStores.GameJolt;
+using System.Windows.Controls;
 
 namespace SuccessStory
 {
     public class SuccessStory : PluginExtended<SuccessStorySettingsViewModel, SuccessStoryDatabase>
     {
+        #region Properties
+
         public override Guid Id => Guid.Parse("cebe6d32-8c46-4459-b993-5a5189d60788");
 
         public static SteamApi SteamApi { get; set; }
         public static EpicApi EpicApi { get; set; }
         public static GogApi GogApi { get; set; }
         public static GameJoltApi GameJoltApi { get; set; }
+
+        public static ExophaseAchievements ExophaseAchievements { get; set; }
 
         internal TopPanelItem TopPanelItem { get; set; }
         internal SidebarItem SidebarItem { get; set; }
@@ -54,17 +58,18 @@ namespace SuccessStory
 
         private bool PreventLibraryUpdatedOnStart { get; set; } = true;
 
+        #endregion
 
         public SuccessStory(IPlayniteAPI api) : base(api)
         {
             // Manual dll load
             try
             {
-                string PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string PathDLL = Path.Combine(PluginPath, "VirtualizingWrapPanel.dll");
-                if (File.Exists(PathDLL))
+                string pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string pathDLL = Path.Combine(pluginPath, "VirtualizingWrapPanel.dll");
+                if (File.Exists(pathDLL))
                 {
-                    Assembly DLL = Assembly.LoadFile(PathDLL);
+                    Assembly DLL = Assembly.LoadFile(pathDLL);
                 }
             }
             catch (Exception ex)
@@ -113,19 +118,19 @@ namespace SuccessStory
             };
         }
 
-
         #region Custom event
+
         public void OnCustomThemeButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                string ButtonName = ((Button)sender).Name;
-                if (ButtonName == "PART_CustomScButton")
+                string buttonName = ((Button)sender).Name;
+                if (buttonName == "PART_CustomScButton")
                 {
                     Common.LogDebug(true, $"OnCustomThemeButtonClick()");
 
                     PluginDatabase.IsViewOpen = true;
-                    dynamic ViewExtension = null;
+                    dynamic viewExtension = null;
 
                     WindowOptions windowOptions = new WindowOptions
                     {
@@ -141,44 +146,44 @@ namespace SuccessStory
                     {
                         if ((PluginDatabase.GameContext.Name.IsEqual("overwatch") || PluginDatabase.GameContext.Name.IsEqual("overwatch 2")) && (PluginDatabase.GameContext.Source?.Name?.IsEqual("battle.net") ?? false))
                         {
-                            ViewExtension = new SuccessStoryOverwatchView(PluginDatabase.GameContext);
+                            viewExtension = new SuccessStoryOverwatchView(PluginDatabase.GameContext);
                         }
                         else if (PluginSettings.Settings.EnableGenshinImpact && PluginDatabase.GameContext.Name.IsEqual("Genshin Impact"))
                         {
-                            ViewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
+                            viewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
                         }
                         else if (PluginSettings.Settings.EnableWutheringWaves && PluginDatabase.GameContext.Name.IsEqual("Wuthering Waves"))
                         {
-                            ViewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
+                            viewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
                         }
                         else if (PluginSettings.Settings.EnableHonkaiStarRail && PluginDatabase.GameContext.Name.IsEqual("Honkai: Star Rail"))
                         {
-                            ViewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
+                            viewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
                         }
                         else if (PluginSettings.Settings.EnableZenlessZoneZero && PluginDatabase.GameContext.Name.IsEqual("Zenless Zone Zero"))
                         {
-                            ViewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
+                            viewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
                         }
                         else if (PluginSettings.Settings.EnableGuildWars2 && PluginDatabase.GameContext.Name.IsEqual("Guild Wars 2"))
                         {
-                            ViewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
+                            viewExtension = new SuccessStoryCategoryView(PluginDatabase.GameContext);
                         }
                         else
                         {
-                            ViewExtension = PluginDatabase.GameContext.PluginId == PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.SteamLibrary) && PluginSettings.Settings.SteamGroupData
+                            viewExtension = PluginDatabase.GameContext.PluginId == PlayniteTools.GetPluginId(PlayniteTools.ExternalPlugin.SteamLibrary) && PluginSettings.Settings.SteamGroupData
                                 ? (dynamic)new SuccessStoryCategoryView(PluginDatabase.GameContext)
                                 : (dynamic)new SuccessStoryOneGameView(PluginDatabase.GameContext);
                         }
                     }
                     else
                     {
-                        ViewExtension = PluginDatabase.PluginSettings.Settings.EnableRetroAchievementsView && PlayniteTools.IsGameEmulated(PluginDatabase.GameContext)
+                        viewExtension = PluginDatabase.PluginSettings.Settings.EnableRetroAchievementsView && PlayniteTools.IsGameEmulated(PluginDatabase.GameContext)
                             ? (dynamic)new SuccessView(true, PluginDatabase.GameContext)
                             : (dynamic)new SuccessView(false, PluginDatabase.GameContext);
                     }
 
 
-                    Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCSuccessStory"), ViewExtension, windowOptions);
+                    Window windowExtension = PlayniteUiHelper.CreateExtensionWindow(ResourceProvider.GetString("LOCSuccessStory"), viewExtension, windowOptions);
                     _ = windowExtension.ShowDialog();
                     PluginDatabase.IsViewOpen = false;
                 }
@@ -210,10 +215,11 @@ namespace SuccessStory
                 Common.LogError(ex, false, $"Error on WindowBase_LoadedEvent for {winIdProperty}", true, PluginDatabase.PluginName);
             }
         }
+
         #endregion
 
-
         #region Theme integration
+
         // Button on top panel
         public override IEnumerable<TopPanelItem> GetTopPanelItems()
         {
@@ -279,10 +285,11 @@ namespace SuccessStory
                 SidebarRaItem
             };
         }
+
         #endregion
 
-
         #region Menus
+
         // To add new game menu items override GetGameMenuItems
         public override IEnumerable<GameMenuItem> GetGameMenuItems(GetGameMenuItemsArgs args)
         {
@@ -291,14 +298,14 @@ namespace SuccessStory
 
             // TODO: for multiple games, either check if any of them could have achievements, or just assume so
             SuccessStoryDatabase.AchievementSource achievementSource = SuccessStoryDatabase.GetAchievementSource(PluginSettings.Settings, gameMenu);
-            bool GameCouldHaveAchievements = achievementSource != SuccessStoryDatabase.AchievementSource.None;
+            bool gameCouldHaveAchievements = achievementSource != SuccessStoryDatabase.AchievementSource.None;
             GameAchievements gameAchievements = PluginDatabase.Get(gameMenu, true);
 
             List<GameMenuItem> gameMenuItems = new List<GameMenuItem>();
 
             if (!gameAchievements.IsIgnored)
             {
-                if (GameCouldHaveAchievements)
+                if (gameCouldHaveAchievements)
                 {
                     if (!PluginSettings.Settings.EnableOneGameView || (PluginSettings.Settings.EnableOneGameView && gameAchievements.HasData))
                     {
@@ -723,7 +730,7 @@ namespace SuccessStory
             }
             else
             {
-                if (GameCouldHaveAchievements)
+                if (gameCouldHaveAchievements)
                 {
                     gameMenuItems.Add(new GameMenuItem
                     {
@@ -759,10 +766,10 @@ namespace SuccessStory
         // To add new main menu items override GetMainMenuItems
         public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
         {
-            string MenuInExtensions = string.Empty;
+            string menuInExtensions = string.Empty;
             if (PluginSettings.Settings.MenuInExtensions)
             {
-                MenuInExtensions = "@";
+                menuInExtensions = "@";
             }
 
             List<MainMenuItem> mainMenuItems = new List<MainMenuItem>
@@ -770,7 +777,7 @@ namespace SuccessStory
                 // Show list achievements for all games
                 new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = ResourceProvider.GetString("LOCSuccessStoryViewGames"),
                     Action = (mainMenuItem) =>
                     {
@@ -798,7 +805,7 @@ namespace SuccessStory
             {
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = ResourceProvider.GetString("LOCSuccessStoryViewGames") + " - RetroAchievements",
                     Action = (mainMenuItem) =>
                     {
@@ -827,14 +834,14 @@ namespace SuccessStory
 
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                 Description = "-"
             });
 
             // Download missing data for all game in database
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                 Description = ResourceProvider.GetString("LOCCommonDownloadPluginData"),
                 Action = (mainMenuItem) =>
                 {
@@ -846,7 +853,7 @@ namespace SuccessStory
 
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                 Description = ResourceProvider.GetString("LOCCommonExtractToCsv"),
                 Action = (mainMenuItem) =>
                 {
@@ -859,7 +866,7 @@ namespace SuccessStory
             });
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                 Description = ResourceProvider.GetString("LOCCommonExtractAllToCsv"),
                 Action = (mainMenuItem) =>
                 {
@@ -875,14 +882,14 @@ namespace SuccessStory
             {
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = "-"
                 });
 
                 // Refresh rarity data for manual achievements
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = ResourceProvider.GetString("LOCSsRefreshRaretyManual"),
                     Action = (mainMenuItem) =>
                     {
@@ -893,7 +900,7 @@ namespace SuccessStory
                 // Refresh estimate time data for manual achievements
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = ResourceProvider.GetString("LOCSsRefreshEstimateTimeManual"),
                     Action = (mainMenuItem) =>
                     {
@@ -906,14 +913,14 @@ namespace SuccessStory
             {
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = "-"
                 });
 
                 // Add tag for selected game in database if data exists
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = ResourceProvider.GetString("LOCCommonAddTPlugin"),
                     Action = (mainMenuItem) =>
                     {
@@ -923,7 +930,7 @@ namespace SuccessStory
                 // Add tag for all games
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = ResourceProvider.GetString("LOCCommonAddAllTags"),
                     Action = (mainMenuItem) =>
                     {
@@ -933,7 +940,7 @@ namespace SuccessStory
                 // Remove tag for all game in database
                 mainMenuItems.Add(new MainMenuItem
                 {
-                    MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                    MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                     Description = ResourceProvider.GetString("LOCCommonRemoveAllTags"),
                     Action = (mainMenuItem) =>
                     {
@@ -946,12 +953,12 @@ namespace SuccessStory
 #if DEBUG
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                 Description = "-"
             });
             mainMenuItems.Add(new MainMenuItem
             {
-                MenuSection = MenuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
+                MenuSection = menuInExtensions + ResourceProvider.GetString("LOCSuccessStory"),
                 Description = "Test",
                 Action = (mainMenuItem) =>
                 {
@@ -962,10 +969,11 @@ namespace SuccessStory
 
             return mainMenuItems;
         }
+
         #endregion
 
-
         #region Game event
+
         public override void OnGameSelected(OnGameSelectedEventArgs args)
         {
             try
@@ -1009,7 +1017,6 @@ namespace SuccessStory
         // Add code to be executed when game is uninstalled.
         public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
         {
-
         }
 
         // Add code to be executed when game is preparing to be started.
@@ -1021,7 +1028,6 @@ namespace SuccessStory
         // Add code to be executed when game is started running.
         public override void OnGameStarted(OnGameStartedEventArgs args)
         {
-
         }
 
         // Add code to be executed when game is preparing to be started.
@@ -1030,48 +1036,102 @@ namespace SuccessStory
             TaskIsPaused = false;
             _ = PluginDatabase.RefreshData(args.Game);
         }
+
         #endregion
 
-
         #region Application event
+
         // Add code to be executed when Playnite is initialized.
         public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
         {
-            // StoreAPI intialization
-            SteamApi = new SteamApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
-            SteamApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            SteamApi.StoreSettings = PluginDatabase.PluginSettings.Settings.SteamStoreSettings;
-            if (PluginDatabase.PluginSettings.Settings.EnableSteam)
-            {
-                _ = SteamApi.CurrentAccountInfos;
-            }
+			// StoreAPI Initialization
+			Task.Run(async () =>
+			{
+				var tasks = new[]
+				{
+		            Task.Run(() =>
+		            {
+			            try
+			            {
+				            Logger.Info("ExophaseAchievements Initialization");
+				            ExophaseAchievements = new ExophaseAchievements();
+			            }
+			            catch (Exception ex)
+			            {
+				            Logger.Error(ex, "Error initializing ExophaseAchievements");
+			            }
+		            }),
+		            Task.Run(() =>
+		            {
+			            try
+			            {
+				            Logger.Info("SteamApi Initialization");
+				            SteamApi = new SteamApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
+				            SteamApi.Initialization(
+					            PluginDatabase.PluginSettings.Settings.SteamStoreSettings,
+					            PluginDatabase.PluginSettings.Settings.PluginState.SteamIsEnabled && PluginDatabase.PluginSettings.Settings.EnableSteam
+				            );
+			            }
+			            catch (Exception ex)
+			            {
+				            Logger.Error(ex, "Error initializing SteamApi");
+			            }
+		            }),
+		            Task.Run(() =>
+		            {
+			            try
+			            {
+				            Logger.Info("EpicApi Initialization");
+				            EpicApi = new EpicApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
+				            EpicApi.Initialization(
+					            PluginDatabase.PluginSettings.Settings.EpicStoreSettings,
+					            PluginDatabase.PluginSettings.Settings.PluginState.EpicIsEnabled && PluginDatabase.PluginSettings.Settings.EnableEpic
+				            );
+			            }
+			            catch (Exception ex)
+			            {
+				            Logger.Error(ex, "Error initializing EpicApi");
+			            }
+		            }),
+		            Task.Run(() =>
+		            {
+			            try
+			            {
+				            Logger.Info("GogApi Initialization");
+				            GogApi = new GogApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
+				            GogApi.Initialization(
+					            PluginDatabase.PluginSettings.Settings.GogStoreSettings,
+					            PluginDatabase.PluginSettings.Settings.PluginState.GogIsEnabled && PluginDatabase.PluginSettings.Settings.EnableGog
+				            );
+			            }
+			            catch (Exception ex)
+			            {
+				            Logger.Error(ex, "Error initializing GogApi");
+			            }
+		            }),
+		            Task.Run(() =>
+		            {
+			            try
+			            {
+				            Logger.Info("GameJoltApi Initialization");
+				            GameJoltApi = new GameJoltApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
+				            GameJoltApi.Initialization(
+					            PluginDatabase.PluginSettings.Settings.GameJoltStoreSettings,
+					            PluginDatabase.PluginSettings.Settings.PluginState.GameJoltIsEnabled && PluginDatabase.PluginSettings.Settings.EnableGameJolt
+				            );
+			            }
+			            catch (Exception ex)
+			            {
+				            Logger.Error(ex, "Error initializing GameJoltApi");
+			            }
+		            })
+	            };
 
-            EpicApi = new EpicApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
-            EpicApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            EpicApi.StoreSettings = PluginDatabase.PluginSettings.Settings.EpicStoreSettings;
-            if (PluginDatabase.PluginSettings.Settings.EnableEpic)
-            {
-                _ = EpicApi.CurrentAccountInfos;
-            }
+				await Task.WhenAll(tasks);
+				Logger.Info("All API initializations completed");
+			});
 
-            GogApi = new GogApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
-            GogApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            GogApi.StoreSettings = PluginDatabase.PluginSettings.Settings.GogStoreSettings;
-            if (PluginDatabase.PluginSettings.Settings.EnableGog)
-            {
-                _ = GogApi.CurrentAccountInfos;
-            }
-
-            GameJoltApi = new GameJoltApi(PluginDatabase.PluginName, PlayniteTools.ExternalPlugin.SuccessStory);
-            GameJoltApi.SetLanguage(API.Instance.ApplicationSettings.Language);
-            GameJoltApi.StoreSettings = PluginDatabase.PluginSettings.Settings.GameJoltStoreSettings;
-            if (PluginDatabase.PluginSettings.Settings.EnableGameJolt)
-            {
-                _ = GameJoltApi.CurrentAccountInfos;
-            }
-
-
-            Task.Run(() =>
+			Task.Run(() =>
             {
                 Thread.Sleep(10000);
                 PreventLibraryUpdatedOnStart = false;
@@ -1130,7 +1190,6 @@ namespace SuccessStory
 
                 }, globalProgressOptions);
             }
-
 
             // Cache images
             if (PluginSettings.Settings.EnableImageCache)
@@ -1195,7 +1254,6 @@ namespace SuccessStory
                 }, TokenSource.Token);
             }
 
-
             // QuickSearch support
             try
             {
@@ -1212,14 +1270,13 @@ namespace SuccessStory
                 Common.LogError(ex, false);
             }
 
-
             // Check Exophase if use localised achievements
             if (PluginSettings.Settings.UseLocalised)
             {
                 Task.Run(() =>
                 {
-                    ExophaseAchievements exophaseAchievements = new ExophaseAchievements();
-                    if (!exophaseAchievements.IsConnected())
+                    Thread.Sleep(5000);
+                    if (!ExophaseAchievements.IsConnected())
                     {
                         Application.Current.Dispatcher?.BeginInvoke((Action)delegate
                         {
@@ -1236,17 +1293,17 @@ namespace SuccessStory
                 });
             }
 
-
             // Initialize list console for RA
             if (PluginSettings.Settings.EnableRetroAchievements)
             {
                 Task.Run(() =>
                 {
-                    List<RaConsole> ra_Consoles = RetroAchievements.GetConsoleIDs();
+                    RetroAchievements retroAchievements = new RetroAchievements();
+                    List<RaConsole> ra_Consoles = retroAchievements.GetConsoleIDs();
                     if (ra_Consoles == null)
                     {
                         Thread.Sleep(2000);
-                        ra_Consoles = RetroAchievements.GetConsoleIDs();
+                        ra_Consoles = retroAchievements.GetConsoleIDs();
                     }
 
                     ra_Consoles.ForEach(x =>
@@ -1264,7 +1321,7 @@ namespace SuccessStory
                             // Search and add platform
                             API.Instance.Database.Platforms.ForEach(z =>
                             {
-                                int RaConsoleId = RetroAchievements.FindConsole(z.Name);
+                                int RaConsoleId = retroAchievements.FindConsole(z.Name);
                                 if (RaConsoleId == x.ID)
                                 {
                                     PluginSettings.Settings.RaConsoleAssociateds.Find(y => y.RaConsoleId == RaConsoleId).Platforms.Add(new Platform { Id = z.Id });
@@ -1288,8 +1345,8 @@ namespace SuccessStory
         {
             TokenSource.Cancel();
         }
-        #endregion
 
+        #endregion
 
         // Add code to be executed when library is updated.
         public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
@@ -1302,8 +1359,8 @@ namespace SuccessStory
             }
         }
 
-
         #region Settings
+
         public override ISettings GetSettings(bool firstRunSettings)
         {
             return PluginSettings;
@@ -1313,6 +1370,7 @@ namespace SuccessStory
         {
             return new SuccessStorySettingsView(this);
         }
+
         #endregion
     }
 }

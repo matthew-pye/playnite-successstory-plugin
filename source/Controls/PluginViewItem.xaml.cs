@@ -18,10 +18,10 @@ namespace SuccessStory.Controls
     public partial class PluginViewItem : PluginUserControlExtend
     {
         private SuccessStoryDatabase PluginDatabase => SuccessStory.PluginDatabase;
-        internal override IPluginDatabase pluginDatabase => PluginDatabase;
+        protected override IPluginDatabase pluginDatabase => PluginDatabase;
 
         private PluginViewItemDataContext ControlDataContext = new PluginViewItemDataContext();
-        internal override IDataContext controlDataContext
+        protected override IDataContext controlDataContext
         {
             get => ControlDataContext;
             set => ControlDataContext = (PluginViewItemDataContext)controlDataContext;
@@ -62,10 +62,9 @@ namespace SuccessStory.Controls
             ControlDataContext.Total = 0;
         }
 
-
-        public override void SetData(Game newContext, PluginDataBaseGameBase PluginGameData)
+        public override void SetData(Game newContext, PluginDataBaseGameBase pluginGameData)
         {
-            GameAchievements gameAchievements = (GameAchievements)PluginGameData;
+            GameAchievements gameAchievements = (GameAchievements)pluginGameData;
 
             ControlDataContext.Unlocked = gameAchievements.Unlocked;
             ControlDataContext.Total = gameAchievements.Total;
