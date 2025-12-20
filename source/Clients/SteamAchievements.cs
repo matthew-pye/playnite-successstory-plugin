@@ -141,7 +141,8 @@ namespace SuccessStory.Clients
                 }
 
                 // Set progression
-                if (gameAchievements.HasAchievements && gameAchievements.Items.Where(x => x.Progression?.Max != 0)?.Count() != 0)
+                if (gameAchievements.HasAchievements && gameAchievements.Items.Where(x => x.Progression?.Max != 0)?.Count() != 0
+                    && (PluginDatabase.PluginSettings.Settings.SteamStoreSettings.UseAuth || !SteamApi.CurrentAccountInfos.IsPrivate))
                 {
                     gameAchievements.Items = GetProgressionByWeb(gameAchievements.Items, game);
                 }
@@ -516,10 +517,15 @@ namespace SuccessStory.Clients
         /// <param name="achievements">Achievements to enrich.</param>
         /// <param name="game">The game being processed.</param>
         /// <returns>List of updated achievements.</returns>
-        private List<Models.Achievement> GetProgressionByWeb(List<Models.Achievement> achievements, Game game)
+        private List<Achievement> GetProgressionByWeb(List<Achievement> achievements, Game game)
         {
-            var achievementsProgression = SteamApi.GetProgressionByWeb(uint.Parse(game.GameId), SteamApi.CurrentAccountInfos);
-            foreach(var achievement in achievements)
+			var achievementsProgression = SteamApi.GetProgressionByWeb(uint.Parse(game.GameId), SteamApi.CurrentAccountInfos);
+			if (achievementsProgression == null)
+			{
+				return achievements;
+			}
+
+			foreach (var achievement in achievements)
             {
                 var achievementProgression = achievementsProgression.FirstOrDefault(x => x.Id.IsEqual(achievement.ApiName));
                 if (achievementProgression != null)
