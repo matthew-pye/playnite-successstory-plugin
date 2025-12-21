@@ -583,7 +583,7 @@
 										</Grid.RowDefinitions>
 
 										<Label Grid.Column="0" Content="{DynamicResource LOCSuccessStoryEnableXeniaFolder}" />
-										<TextBox Name="PART_XeniaFolder" Grid.Column="2" Text="{Binding Settings.XeniaInstallationFolder}" />
+                                        <TextBox Name="PART_XeniaFolder" Grid.Column="2" Text="{Binding Settings.XeniaProfileFolder}" />
 										<Button Grid.Column="4" Content="" FontFamily="{DynamicResource CommonFont}" Click="ButtonSelectXeniaFolder_Click" />
 										<!-- <Button Content="&#xe980;" FontFamily="{DynamicResource CommonFont}" Click="ButtonAddXeniaFolder_Click" 
                         Name="ButtonAddXeniaFolder" Grid.Column="6"

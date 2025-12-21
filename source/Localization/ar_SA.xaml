@@ -100,7 +100,7 @@ Associate the platform in the plugin settings</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">مجلد المستخدم الرئيس</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia__canary.exe location</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia Profile Location</sys:String>
 
 	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Show separate view for RetroAchievements</sys:String>
 

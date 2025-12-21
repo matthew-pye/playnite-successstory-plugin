@@ -100,7 +100,7 @@ Platformu eklenti ayarlarında ilişkilendirin</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Başlangıç kullanıcı klasörü</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia__canary.exe location</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia Profile Location</sys:String>
 
 	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">RetroAchievements için ayrı görünüm göster</sys:String>
 

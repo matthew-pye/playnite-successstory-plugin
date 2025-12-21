@@ -100,7 +100,7 @@ Associer la plate-forme dans les paramètres du plugin</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Dossier de l'utilisateur</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia__canary.exe location</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia Profile Location</sys:String>
 
 	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Afficher une vue séparée pour les succès RetroAchievements</sys:String>
 

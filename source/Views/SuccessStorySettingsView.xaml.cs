@@ -599,17 +599,16 @@ namespace SuccessStory.Views
 			string selectedFolder = API.Instance.Dialogs.SelectFolder();
 			if (!selectedFolder.IsNullOrEmpty())
 			{
-				string xeniaExe = Path.Combine(selectedFolder, "xenia_canary.exe");
-				if (File.Exists(xeniaExe))
+				string xeniaAccount = Path.Combine(selectedFolder, "Account");
+				if (File.Exists(xeniaAccount))
 				{
 					selectedFolder = selectedFolder.TrimEnd('\\') + '\\'; // Add trailing slash
 					PART_XeniaFolder.Text = selectedFolder;
-					PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder = selectedFolder;
+					PluginDatabase.PluginSettings.Settings.XeniaProfileFolder = selectedFolder;
 					// Initialize Xbox360 achievements environment
 					try
 					{
-						var xbox360Achievements = new Xbox360Achievements(API.Instance, PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder);
-						xbox360Achievements.InitializeXeniaEnvironment(xeniaExe);
+						var xbox360Achievements = new Xbox360Achievements(API.Instance, PluginDatabase.PluginSettings.Settings.XeniaProfileFolder);
 					}
 					catch (Exception ex)
 					{
@@ -632,21 +631,21 @@ namespace SuccessStory.Views
 		{
 			var dialog = new Microsoft.Win32.OpenFileDialog
 			{
-				Filter = "Xenia Canary|xenia_canary.exe",
-				Title = ResourceProvider.GetString("LOCSuccessStorySelectXeniaExe")
+				Filter = "",
+				Title = "Select Account file for profile!"
 			};
 			if (dialog.ShowDialog() == true)
 			{
-				string xeniaFolder = Path.GetDirectoryName(dialog.FileName);
-				xeniaFolder = xeniaFolder.TrimEnd('\\') + '\\'; // Add trailing slash
-				PART_XeniaFolder.Text = xeniaFolder;
-				PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder = xeniaFolder;
+				string xeniaProfileFolder = Path.GetDirectoryName(dialog.FileName);
+				xeniaProfileFolder = xeniaProfileFolder.TrimEnd('\\') + '\\'; // Add trailing slash
+				PART_XeniaFolder.Text = xeniaProfileFolder;
+				PluginDatabase.PluginSettings.Settings.XeniaProfileFolder = xeniaProfileFolder;
 				// Initialize Xbox360 achievements environment
 				try
 				{
-					var xbox360Achievements = new Xbox360Achievements(API.Instance, PluginDatabase.PluginSettings.Settings.XeniaInstallationFolder);
-					xbox360Achievements.InitializeXeniaEnvironment(dialog.FileName);
-				}
+					var xbox360Achievements = new Xbox360Achievements(API.Instance, PluginDatabase.PluginSettings.Settings.XeniaProfileFolder);
+                    xbox360Achievements.InitializePaths();
+                }
 				catch (Exception ex)
 				{
 					Common.LogError(ex, false, true, PluginDatabase.PluginName);

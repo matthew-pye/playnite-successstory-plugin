@@ -99,7 +99,7 @@ Associate the platform in the plugin settings</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">主用户文件夹</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia__canary.exe location</sys:String>
+	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia Profile Location</sys:String>
 
 	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">为 RetroAchievements 显示单独的视图</sys:String>
 

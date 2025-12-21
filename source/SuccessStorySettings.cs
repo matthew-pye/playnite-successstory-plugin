@@ -151,8 +151,8 @@ namespace SuccessStory
 		public List<Folder> ShadPS4InstallationFolders { get; set; } = new List<Folder>();
 
 		public bool EnableXbox360Achievements { get; set; } = false;
-		public string XeniaInstallationFolder { get; set; } = string.Empty;
-		public List<Folder> XeniaInstallationFolders { get; set; } = new List<Folder>();
+        public string XeniaProfileFolder { get; set; } = string.Empty;
+        public List<Folder> XeniaInstallationFolders { get; set; } = new List<Folder>();
 
 		public bool EnableGameJolt { get; set; } = false;
 
