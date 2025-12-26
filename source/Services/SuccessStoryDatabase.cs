@@ -990,7 +990,6 @@ namespace SuccessStory.Services
             API.Instance.Database.Games.Update(game);
         }
 
-
         public void RefreshRarety()
         {
             GlobalProgressOptions options = new GlobalProgressOptions($"{PluginName} - {ResourceProvider.GetString("LOCCommonProcessing")}")
@@ -1262,7 +1261,6 @@ namespace SuccessStory.Services
                 Refresh(gameAchievements.Id);
             }
         }
-
 
         internal override string GetCsvData(GlobalProgressActionArgs a, bool minimum)
         {

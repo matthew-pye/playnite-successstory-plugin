@@ -5,6 +5,7 @@ using CommonPluginsShared.Models;
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using Playnite.SDK.Models;
+using SteamKit2.GC.Dota.Internal;
 using SuccessStory.Models;
 using SuccessStory.Models.RetroAchievements;
 using SuccessStory.Services;
@@ -85,6 +86,12 @@ namespace SuccessStory.Clients
 
             if (IsConfigured())
             {
+                if (File.Exists($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json"))
+                {
+                    string json = File.ReadAllText($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json");
+                    gameAchievements = Serialization.FromJson<GameAchievements>(json);
+                }
+
                 if (GameId == 0)
                 {
                     int consoleID = GetConsoleId(game);
@@ -105,6 +112,7 @@ namespace SuccessStory.Clients
                 }
                 else
                 {
+                    PluginDatabase.AddOrUpdate(gameAchievements);
                     return gameAchievements;
                 }
             }
@@ -127,6 +135,7 @@ namespace SuccessStory.Clients
                 };
             }
 
+            PluginDatabase.AddOrUpdate(gameAchievements);
             gameAchievements.SetRaretyIndicator();
             return gameAchievements;
         }

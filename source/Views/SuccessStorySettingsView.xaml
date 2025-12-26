@@ -378,7 +378,7 @@
                                         </Grid.RowDefinitions>
 
                                         <Label Grid.Column="0" Content="{DynamicResource LOCSuccessStoryEnableRpcs3HomeFolder}" />
-                                        
+
                                         <TextBox Name="PART_Rpcs3Folder" Grid.Column="2" Text="{Binding Settings.Rpcs3InstallationFolder}" />
                                         <Button Grid.Column="4" Content="" FontFamily="{DynamicResource CommonFont}" Click="ButtonSelectFolder_Click" />
                                         <Button Content="&#xe980;" FontFamily="{DynamicResource CommonFont}" Click="ButtonAddRpcs3Folder_Click" 
@@ -427,174 +427,174 @@
                                     </Grid>
                                 </Border>
                             </Expander.Content>
-						</Expander>
+                        </Expander>
 
-						<Expander Margin="0,10,0,0">
-							<Expander.Style>
-								<Style TargetType="{x:Type Expander}" BasedOn="{StaticResource {x:Type Expander}}">
-									<Setter Property="Background" Value="Transparent" />
-								</Style>
-							</Expander.Style>
+                        <Expander Margin="0,10,0,0">
+                            <Expander.Style>
+                                <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource {x:Type Expander}}">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Style>
+                            </Expander.Style>
 
-							<Expander.Header>
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="2*" />
-										<ColumnDefinition Width="8" />
-										<ColumnDefinition Width="auto" />
-										<ColumnDefinition Width="8" />
-										<ColumnDefinition Width="auto" />
-										<ColumnDefinition Width="8" />
-										<ColumnDefinition Width="auto" />
-										<ColumnDefinition Width="*" />
-										<ColumnDefinition Width="40" />
-									</Grid.ColumnDefinitions>
+                            <Expander.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
 
-									<CheckBox Grid.Column="0" IsChecked="{Binding Settings.EnableShadPS4Achievements}" 
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding Settings.EnableShadPS4Achievements}" 
                       Name="PART_EnableShadPS4Achievements" VerticalAlignment="Center">
-										<Label Content="{DynamicResource LOCSuccessStoryEnableShadPS4Achievements}" />
-									</CheckBox>
+                                        <Label Content="{DynamicResource LOCSuccessStoryEnableShadPS4Achievements}" />
+                                    </CheckBox>
 
-									<Button Grid.Column="8" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Right"
+                                    <Button Grid.Column="8" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Right"
                     Click="Button_Click_Wiki" Tag="https://github.com/eFMann/playnite-successstory-plugin/wiki/Configure-ShadPS4-Achievements" />
-								</Grid>
-							</Expander.Header>
+                                </Grid>
+                            </Expander.Header>
 
-							<Expander.Content>
-								<Border IsEnabled="{Binding ElementName=PART_EnableShadPS4Achievements, Path=IsChecked}"
+                            <Expander.Content>
+                                <Border IsEnabled="{Binding ElementName=PART_EnableShadPS4Achievements, Path=IsChecked}"
                 Margin="5" Padding="10"
                 BorderBrush="{DynamicResource PopupBorderBrush}"
                 BorderThickness="{DynamicResource PopupBorderThickness}">
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="auto" />
-											<ColumnDefinition Width="10" />
-											<ColumnDefinition Width="*" />
-											<ColumnDefinition Width="10" />
-											<ColumnDefinition Width="auto" />
-											<ColumnDefinition Width="10" />
-											<ColumnDefinition Width="auto" />
-										</Grid.ColumnDefinitions>
-										<Grid.RowDefinitions>
-											<RowDefinition Height="auto" />
-										</Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
 
-										<Label Grid.Column="0" Content="{DynamicResource LOCSuccessStoryEnableShadPS4Folder}" />
+                                        <Label Grid.Column="0" Content="{DynamicResource LOCSuccessStoryEnableShadPS4Folder}" />
 
-										<TextBox Name="PART_ShadPS4Folder" Grid.Column="2" Text="{Binding Settings.ShadPS4InstallationFolder}" />
-										<Button Grid.Column="4" Content="" FontFamily="{DynamicResource CommonFont}" Click="ButtonSelectShadPS4Folder_Click" />
-										<!-- <Button Content="&#xe980;" FontFamily="{DynamicResource CommonFont}" Click="ButtonAddShadPS4Folder_Click" 
+                                        <TextBox Name="PART_ShadPS4Folder" Grid.Column="2" Text="{Binding Settings.ShadPS4InstallationFolder}" />
+                                        <Button Grid.Column="4" Content="" FontFamily="{DynamicResource CommonFont}" Click="ButtonSelectShadPS4Folder_Click" />
+                                        <!-- <Button Content="&#xe980;" FontFamily="{DynamicResource CommonFont}" Click="ButtonAddShadPS4Folder_Click" 
                         Name="ButtonAddShadPS4Folder" Grid.Column="6"
                         IsEnabled="{Binding ElementName=PART_ShadPS4Folder, Path=Text, Converter={StaticResource StringNullOrEmptyToBoolConverter}}" /> -->
 
-										<Grid Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="6">
-											<ItemsControl Name="PART_ItemsShadPS4Folder" AlternationCount="100" Margin="0,10,0,0" Visibility="Collapsed">
-												<ItemsControl.ItemTemplate>
-													<DataTemplate>
-														<Grid Margin="0,0,0,5">
-															<Grid.ColumnDefinitions>
-																<ColumnDefinition Width="*" />
-																<ColumnDefinition Width="8" />
-																<ColumnDefinition Width="auto" />
-															</Grid.ColumnDefinitions>
-															<Grid.RowDefinitions>
-																<RowDefinition Height="auto" />
-																<RowDefinition Height="auto" />
-															</Grid.RowDefinitions>
+                                        <Grid Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="6">
+                                            <ItemsControl Name="PART_ItemsShadPS4Folder" AlternationCount="100" Margin="0,10,0,0" Visibility="Collapsed">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="0,0,0,5">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="8" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="auto" />
+                                                                <RowDefinition Height="auto" />
+                                                            </Grid.RowDefinitions>
 
-															<TextBox Text="{Binding FolderPath}" VerticalAlignment="Center" MinWidth="180" Grid.Column="0" />
+                                                            <TextBox Text="{Binding FolderPath}" VerticalAlignment="Center" MinWidth="180" Grid.Column="0" />
 
-															<Grid Grid.Column="2">
-																<Grid.ColumnDefinitions>
-																	<ColumnDefinition Width="auto" />
-																	<ColumnDefinition Width="8" />
-																	<ColumnDefinition Width="auto" />
-																</Grid.ColumnDefinitions>
+                                                            <Grid Grid.Column="2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto" />
+                                                                    <ColumnDefinition Width="8" />
+                                                                    <ColumnDefinition Width="auto" />
+                                                                </Grid.ColumnDefinitions>
 
-																<Button Content="&#xe97e;" FontFamily="{DynamicResource CommonFont}" 
+                                                                <Button Content="&#xe97e;" FontFamily="{DynamicResource CommonFont}" 
                                                 Click="ButtonSelectShadPS4Folder_Click" 
                                                 Name="ButtonSelectShadPS4Folder"                                                                
                                                 Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"
                                                 VerticalAlignment="Center" Grid.Column="0" />
-																<Button Content="&#xe97f;" FontFamily="{DynamicResource CommonFont}" 
+                                                                <Button Content="&#xe97f;" FontFamily="{DynamicResource CommonFont}" 
                                                 Click="ButtonRemoveShadPS4Folder_Click" 
                                                 Name="ButtonRemoveShadPS4Folder"
                                                 Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"
                                                 VerticalAlignment="Center" Grid.Column="2" />
-															</Grid>
-														</Grid>
-													</DataTemplate>
-												</ItemsControl.ItemTemplate>
-											</ItemsControl>
-										</Grid>
-									</Grid>
-								</Border>
-							</Expander.Content>
-						</Expander>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </Expander.Content>
+                        </Expander>
 
-						<Expander Margin="0,10,0,0">
-							<Expander.Style>
-								<Style TargetType="{x:Type Expander}" BasedOn="{StaticResource {x:Type Expander}}">
-									<Setter Property="Background" Value="Transparent" />
-								</Style>
-							</Expander.Style>
+                        <Expander Margin="0,10,0,0">
+                            <Expander.Style>
+                                <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource {x:Type Expander}}">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Style>
+                            </Expander.Style>
 
-							<Expander.Header>
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="2*" />
-										<ColumnDefinition Width="8" />
-										<ColumnDefinition Width="auto" />
-										<ColumnDefinition Width="8" />
-										<ColumnDefinition Width="auto" />
-										<ColumnDefinition Width="8" />
-										<ColumnDefinition Width="auto" />
-										<ColumnDefinition Width="*" />
-										<ColumnDefinition Width="40" />
-									</Grid.ColumnDefinitions>
+                            <Expander.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
 
-									<CheckBox Grid.Column="0" IsChecked="{Binding Settings.EnableXbox360Achievements}" 
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding Settings.EnableXbox360Achievements}" 
                       Name="PART_EnableXbox360Achievements" VerticalAlignment="Center">
-										<Label Content="{DynamicResource LOCSuccessStoryEnableXbox360Achievements}" />
-									</CheckBox>
+                                        <Label Content="{DynamicResource LOCSuccessStoryEnableXbox360Achievements}" />
+                                    </CheckBox>
 
-									<Button Grid.Column="8" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Right"
-                    Click="Button_Click_Wiki" Tag="https://github.com/eFMann/playnite-successstory-plugin/wiki/Configure-Xbox360-Achievements" />
-								</Grid>
-							</Expander.Header>
+                                    <Button Grid.Column="8" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Right"
+                    Click="Button_Click_Wiki" Tag="https://github.com/matthew-pye/playnite-successstory-plugin/wiki/Xbox-360-Achievements" />
+                                </Grid>
+                            </Expander.Header>
 
-							<Expander.Content>
-								<Border IsEnabled="{Binding ElementName=PART_EnableXbox360Achievements, Path=IsChecked}"
+                            <Expander.Content>
+                                <Border IsEnabled="{Binding ElementName=PART_EnableXbox360Achievements, Path=IsChecked}"
                 Margin="5" Padding="10"
                 BorderBrush="{DynamicResource PopupBorderBrush}"
                 BorderThickness="{DynamicResource PopupBorderThickness}">
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="auto" />
-											<ColumnDefinition Width="10" />
-											<ColumnDefinition Width="*" />
-											<ColumnDefinition Width="10" />
-											<ColumnDefinition Width="auto" />
-											<ColumnDefinition Width="10" />
-											<ColumnDefinition Width="auto" />
-										</Grid.ColumnDefinitions>
-										<Grid.RowDefinitions>
-											<RowDefinition Height="auto" />
-										</Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
 
-										<Label Grid.Column="0" Content="{DynamicResource LOCSuccessStoryEnableXeniaFolder}" />
+                                        <Label Grid.Column="0" Content="{DynamicResource LOCSuccessStoryEnableXeniaFolder}" />
                                         <TextBox Name="PART_XeniaFolder" Grid.Column="2" Text="{Binding Settings.XeniaProfileFolder}" />
-										<Button Grid.Column="4" Content="" FontFamily="{DynamicResource CommonFont}" Click="ButtonSelectXeniaFolder_Click" />
-										<!-- <Button Content="&#xe980;" FontFamily="{DynamicResource CommonFont}" Click="ButtonAddXeniaFolder_Click" 
+                                        <Button Grid.Column="4" Content="" FontFamily="{DynamicResource CommonFont}" Click="ButtonSelectXeniaFolder_Click" />
+                                        <!-- <Button Content="&#xe980;" FontFamily="{DynamicResource CommonFont}" Click="ButtonAddXeniaFolder_Click" 
                         Name="ButtonAddXeniaFolder" Grid.Column="6"
                         IsEnabled="{Binding ElementName=PART_XeniaFolder, Path=Text, Converter={StaticResource StringNullOrEmptyToBoolConverter}}" /> -->
-									</Grid>
-								</Border>
-							</Expander.Content>
-						</Expander>
+                                    </Grid>
+                                </Border>
+                            </Expander.Content>
+                        </Expander>
 
 
-						<Expander AttachedProperties:ExpanderAttachedProperties.HideExpanderArrow="True" Margin="0,10,0,0"
+                        <Expander AttachedProperties:ExpanderAttachedProperties.HideExpanderArrow="True" Margin="0,10,0,0"
                                   Visibility="{Binding Settings.PluginState.BattleNetIsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Expander.Style>
                                 <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource {x:Type Expander}}">
@@ -685,8 +685,8 @@
                                         <Label Content="{DynamicResource LOCSuccessStoryEnableWowAchievements}" />
                                     </CheckBox>
 
-                                    <Button Grid.Column="8" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Right"
-                                            Click="Button_Click_Wiki" Tag="https://github.com/Lacro59/playnite-successstory-plugin/wiki/Configure-Battle.net" />
+                                    <Button Grid.Column="8" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Left"
+                                            Click="Button_Click_Wiki" Tag="https://github.com/Lacro59/playnite-successstory-plugin/wiki/Configure-Battle.net" Height="20" Margin="28,0,0,0" VerticalAlignment="Bottom" />
                                 </Grid>
                             </Expander.Header>
 
@@ -719,7 +719,7 @@
                                                     <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                                                 </Style>
                                             </ComboBox.ItemContainerStyle>
-                                            
+
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Text="{Binding Name}" />
@@ -764,7 +764,7 @@
                                 <DockPanel>
                                     <Button DockPanel.Dock="Right" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}"
                                             Click="Button_Click_Wiki" Tag="https://github.com/Lacro59/playnite-successstory-plugin/wiki/Configure-gatcha-games#genshin-impact" />
-                                    
+
                                     <CheckBox IsChecked="{Binding Settings.EnableGenshinImpact}" VerticalAlignment="Center">
                                         <Label Content="{DynamicResource LOCEnableGenshinImpactAchievements}" />
                                     </CheckBox>
@@ -904,131 +904,131 @@
                                 <Style TargetType="{x:Type Expander}" BasedOn="{StaticResource {x:Type Expander}}">
                                     <Setter Property="Background" Value="Transparent" />
                                 </Style>
-							</Expander.Style>
+                            </Expander.Style>
 
-							<Expander.Header>
-								<Grid>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="2*" />
-										<ColumnDefinition Width="8" />
-										<ColumnDefinition Width="auto" />
-									</Grid.ColumnDefinitions>
+                            <Expander.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="8" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
 
-									<CheckBox Grid.Column="0" IsChecked="{Binding Settings.EnableLocal}" VerticalAlignment="Center">
-										<Label Content="Enable Local" />
-									</CheckBox>
-									<!-- eFMann - Added  Wiki button -->
-									<Button Grid.Column="4" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Right"
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding Settings.EnableLocal}" VerticalAlignment="Center">
+                                        <Label Content="Enable Local" />
+                                    </CheckBox>
+                                    <!-- eFMann - Added  Wiki button -->
+                                    <Button Grid.Column="4" Content="&#xefca;" FontFamily="{DynamicResource FontIcoFont}" HorizontalAlignment="Right"
                     Click="Button_Click_Wiki" Tag="https://github.com/eFMann/playnite-successstory-plugin/wiki/Configure-Steam-Emulators" />
-								</Grid>
-							</Expander.Header>
+                                </Grid>
+                            </Expander.Header>
 
-							<Expander.Content>
-								<Border Margin="5" Padding="10" Name="PART_BoderLocal"
+                            <Expander.Content>
+                                <Border Margin="5" Padding="10" Name="PART_BoderLocal"
                 BorderBrush="{DynamicResource PopupBorderBrush}"
                 BorderThickness="{DynamicResource PopupBorderThickness}">
-									<StackPanel>
-										<!-- Added explanation text -->
-										<TextBlock Text="Where to look for Achievements files:" 
+                                    <StackPanel>
+                                        <!-- Added explanation text -->
+                                        <TextBlock Text="Where to look for Achievements files:" 
               Margin="0,0,0,10"
               FontWeight="Bold"/>
 
-										<!-- Default directories list (expandable but not selectable) -->
-										<TextBlock Text="Default Directories:" 
+                                        <!-- Default directories list (expandable but not selectable) -->
+                                        <TextBlock Text="Default Directories:" 
           Margin="0,0,0,5"/>
-										<ComboBox Name="PART_DefaultDirs" 
+                                        <ComboBox Name="PART_DefaultDirs" 
           Margin="0,0,0,10"
           IsReadOnly="True"
           IsEnabled="True"
           Focusable="False"
           IsHitTestVisible="True">
-											<ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\Steam\CODEX"/>
-											<ComboBoxItem IsEnabled="False" Content="%appdata%\Steam\CODEX"/>
-											<ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\Steam\RUNE"/>
-											<ComboBoxItem IsEnabled="False" Content="%appdata%\Steam\RUNE"/>
-											<ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\EMPRESS"/>
-											<ComboBoxItem IsEnabled="False" Content="%appdata%\EMPRESS"/>
-											<ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\OnlineFix"/>
-											<ComboBoxItem IsEnabled="False" Content="%DOCUMENTS%\VALVE"/>
-											<ComboBoxItem IsEnabled="False" Content="%appdata%\Goldberg SteamEmu Saves"/>
-											<ComboBoxItem IsEnabled="False" Content="%appdata%\GSE Saves"/>
-											<ComboBoxItem IsEnabled="False" Content="%appdata%\SmartSteamEmu"/>
-											<ComboBoxItem IsEnabled="False" Content="%DOCUMENTS%\DARKSiDERS"/>
-											<ComboBoxItem IsEnabled="False" Content="%ProgramData%\Steam"/>
-											<ComboBoxItem IsEnabled="False" Content="%localappdata%\SKIDROW"/>
-											<ComboBoxItem IsEnabled="False" Content="%DOCUMENTS%\SKIDROW"/>
-										</ComboBox>
+                                            <ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\Steam\CODEX"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%appdata%\Steam\CODEX"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\Steam\RUNE"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%appdata%\Steam\RUNE"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\EMPRESS"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%appdata%\EMPRESS"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%PUBLIC%\Documents\OnlineFix"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%DOCUMENTS%\VALVE"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%appdata%\Goldberg SteamEmu Saves"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%appdata%\GSE Saves"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%appdata%\SmartSteamEmu"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%DOCUMENTS%\DARKSiDERS"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%ProgramData%\Steam"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%localappdata%\SKIDROW"/>
+                                            <ComboBoxItem IsEnabled="False" Content="%DOCUMENTS%\SKIDROW"/>
+                                        </ComboBox>
 
-										<!-- Custom directory section with Add button -->
-										<Grid Margin="0,0,0,5">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition Width="Auto"/>
-												<ColumnDefinition Width="*"/>
-												<ColumnDefinition Width="Auto"/>
-											</Grid.ColumnDefinitions>
-											<TextBlock Text="Custom Directory:" 
+                                        <!-- Custom directory section with Add button -->
+                                        <Grid Margin="0,0,0,5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Custom Directory:" 
                   VerticalAlignment="Center"/>
-											<Button Content="Add Folder" 
+                                            <Button Content="Add Folder" 
                 Grid.Column="2"
                 Click="ButtonAddLocalFolder_Click"
                 Margin="10,0,0,0"/>
-										</Grid>
+                                        </Grid>
 
-										<ItemsControl MinHeight="10" Name="PART_ItemsControl" AlternationCount="100">
-											<ItemsControl.ItemTemplate>
-												<DataTemplate>
-													<Grid Margin="0,0,0,5">
-														<Grid.ColumnDefinitions>
-															<ColumnDefinition Width="*" />
-															<ColumnDefinition Width="8" />
-															<ColumnDefinition Width="auto" />
-														</Grid.ColumnDefinitions>
-														<Grid.RowDefinitions>
-															<RowDefinition Height="auto" />
-															<RowDefinition Height="auto" />
-														</Grid.RowDefinitions>
+                                        <ItemsControl MinHeight="10" Name="PART_ItemsControl" AlternationCount="100">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,0,0,5">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="8" />
+                                                            <ColumnDefinition Width="auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                        </Grid.RowDefinitions>
 
-														<TextBox Text="{Binding FolderPath}" VerticalAlignment="Center" MinWidth="180" Grid.Column="0" />
+                                                        <TextBox Text="{Binding FolderPath}" VerticalAlignment="Center" MinWidth="180" Grid.Column="0" />
 
-														<Grid Grid.Column="2">
-															<Grid.ColumnDefinitions>
-																<ColumnDefinition Width="auto" />
-																<ColumnDefinition Width="8" />
-																<ColumnDefinition Width="auto" />
-																<ColumnDefinition Width="8" />
-																<ColumnDefinition Width="auto" />
-															</Grid.ColumnDefinitions>
+                                                        <Grid Grid.Column="2">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="8" />
+                                                                <ColumnDefinition Width="auto" />
+                                                                <ColumnDefinition Width="8" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
 
-															<Button Content="&#xe97e;" FontFamily="{DynamicResource CommonFont}" 
+                                                            <Button Content="&#xe97e;" FontFamily="{DynamicResource CommonFont}" 
                                 Click="ButtonSelectLocalFolder_Click" 
                                 Name="ButtonSelectLocalFolder"                                                                
                                 Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"
                                 VerticalAlignment="Center" Grid.Column="0" />
 
-															<ToggleButton Content="&#xe905;" FontFamily="{DynamicResource CommonFont}" 
+                                                            <ToggleButton Content="&#xe905;" FontFamily="{DynamicResource CommonFont}" 
                                     IsChecked="{Binding HasGame, FallbackValue=True}"
                                     Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"
                                     Name="PART_TbButton"
                                     Visibility="Collapsed"
                                     VerticalAlignment="Center" Grid.Column="2" />
 
-															<Button Content="&#xe97f;" FontFamily="{DynamicResource CommonFont}" 
+                                                            <Button Content="&#xe97f;" FontFamily="{DynamicResource CommonFont}" 
                                 Click="ButtonRemoveLocalFolder_Click" 
                                 Name="ButtonRemoveLocalFolder"
                                 Tag="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}"
                                 VerticalAlignment="Center" Grid.Column="4" />
-														</Grid>
+                                                        </Grid>
 
-														<TextBox Grid.Row="1" Margin="100,8,0,0" Text="{Binding GameId}"
+                                                        <TextBox Grid.Row="1" Margin="100,8,0,0" Text="{Binding GameId}"
                             Visibility="Collapsed" />
-													</Grid>
-												</DataTemplate>
-											</ItemsControl.ItemTemplate>
-										</ItemsControl>
-									</StackPanel>
-								</Border>
-							</Expander.Content>
-						</Expander>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </Expander.Content>
+                        </Expander>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -1976,7 +1976,7 @@
                                                     <playnitecontrols:NumericBox LongValue="{Binding Settings.IntegrationListIconHeight}" 
                                                                              Width="40" Grid.Column="1" TextAlignment="Center" />
                                                 </Grid>
-                                                
+
                                                 <interfaces:SettingsOrderAchievement Grid.Row="4" Grid.ColumnSpan="2" UsedGroupBy="True"
                                                                                      OrderAchievement="{Binding Settings.IntegrationListOrderAchievement}" />
                                             </Grid>

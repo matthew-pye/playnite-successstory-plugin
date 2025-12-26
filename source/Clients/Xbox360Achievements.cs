@@ -78,66 +78,6 @@ namespace SuccessStory.Clients
             _logger.Info($"Xbox360Achievements initialized with Xenia path: {_xeniaProfilePath}");
         }
 
-        private void LoadTitleIDs()
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader($"{PluginDatabase.Paths.PluginPath}\\Resources\\Xbox360\\TitleIDs.json"))
-                {
-                    xboxTitleIDs = Serialization.FromJson<Dictionary<string, List<string>>>(sr.ReadToEnd());
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"Xbox360: Error loading titleIDs: {ex.Message}");
-                Common.LogError(ex, false, true, PluginDatabase.PluginName);
-            }
-        }
-
-        public void InitializePaths()
-        {
-            if (string.IsNullOrEmpty(_xeniaProfilePath))
-            {
-                _logger.Error("Xbox360: Xenia profile path is null or empty");
-                return;
-            }
-
-            _successStoryDataDir = Directory.Exists(Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "SuccessStory"))
-                ? Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "SuccessStory".TrimEnd('\\') + '\\')
-                : Path.Combine(_playniteApi.Paths.ApplicationPath, "ExtensionsData", SUCCESS_STORY_GUID, "SuccessStory".TrimEnd('\\') + '\\');
-
-            _successStoryXeniaDir = Directory.Exists(Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "Xenia"))
-                ? Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "Xenia".TrimEnd('\\') + '\\')
-                : Path.Combine(_playniteApi.Paths.ApplicationPath, "ExtensionsData", SUCCESS_STORY_GUID, "Xenia".TrimEnd('\\') + '\\');
-        }
-
-        public string FindAndVerifyTitleID(string GameName)
-        {
-            try
-            {
-                if(xboxTitleIDs.ContainsKey(GameName))
-                {
-                    foreach(var id in xboxTitleIDs[GameName])
-                    {
-                        if(File.Exists($"{_xeniaProfilePath}\\{id}.gpd"))
-                        {
-                            return id;
-                        }
-                    }
-
-                    _logger.Error($"Xbox360: {GameName} gpd file not found! (Has the game been launched before?)");
-                    return null;
-                }
-                _logger.Error($"Xbox360: {GameName} doesnt match any name in title keys json!");
-                return null;
-            }
-            catch (Exception)
-            {
-                _logger.Error($"Xbox360: No titleID found for {GameName}");
-                return null;
-            }  
-        }
-
         public override GameAchievements GetAchievements(Game game)
         {
             _logger.Info($"Xbox360: Getting achievements for game: {game.Name}");
@@ -190,11 +130,11 @@ namespace SuccessStory.Clients
                 ShowNotificationPluginNoConfiguration();
             }
 
+            PluginDatabase.AddOrUpdate(gameAchievements);
             gameAchievements.SetRaretyIndicator();
 
             return gameAchievements;
         }
-
         private List<Achievement> ProcessAchievementsImproved(string TitleID, string successStoryJsonFile, Game game)
         {
             var achievements = new List<Achievement>();
@@ -208,135 +148,6 @@ namespace SuccessStory.Clients
             {
                 _logger.Error($"Xbox360: Failed to process achievements: {ex.Message}");
                 Common.LogError(ex, false, true, PluginDatabase.PluginName);
-            }
-
-            return achievements;
-        }
-
-        UInt16 GPDFile_ReadUInt16(byte[] data, Int32 index, out Int32 outIndex)
-        {
-            outIndex = index + 2;
-            return BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(data, index));
-        }
-        UInt32 GPDFile_ReadUInt32(byte[] data, Int32 index, out Int32 outIndex)
-        {
-            outIndex = index + 4;
-            return BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(data, index));
-        }
-        UInt64 GPDFile_ReadUInt64(byte[] data, Int32 index, out Int32 outIndex)
-        {
-            outIndex = index + 8;
-            return BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt64(data, index));
-        }
-
-        public List<Achievement> LoadGPD(string path, string TitleID)
-        {
-            byte[] gpdFile = File.ReadAllBytes(path);
-            Int32 index = 0;
-
-            XdbfHeader header;
-            List<XdbfEntry> entries = new List<XdbfEntry>();
-
-            header = new XdbfHeader();
-            header.magic = GPDFile_ReadUInt32(gpdFile, index, out index);
-            header.version = GPDFile_ReadUInt32(gpdFile, index, out index);
-            header.entry_count = GPDFile_ReadUInt32(gpdFile, index, out index);
-            header.entry_used = GPDFile_ReadUInt32(gpdFile, index, out index); 
-            header.free_count = GPDFile_ReadUInt32(gpdFile, index, out index); 
-            header.free_used = GPDFile_ReadUInt32(gpdFile, index, out index);
-
-            //Index to start of data
-            Int32 freeIndex = index + (18 * (Int32)header.free_count);
-            UInt32 dataIndex = (UInt32)freeIndex + (8 * header.free_count);
-
-            //Load Data Entries
-            for (var i = 0; i < header.entry_used; i++)
-            {
-                XdbfEntry entry = new XdbfEntry();
-                entry.section = GPDFile_ReadUInt16(gpdFile, index, out index);
-                entry.id = GPDFile_ReadUInt64(gpdFile, index, out index);
-                entry.offset = GPDFile_ReadUInt32(gpdFile, index, out index);
-                entry.size = GPDFile_ReadUInt32(gpdFile, index, out index);
-
-                entry.data = new byte[entry.size];
-                Array.Copy(gpdFile, dataIndex + entry.offset, entry.data, 0, entry.size);
-
-                entries.Add(entry);
-            }
-
-            List<Achievement> achievements = new List<Achievement>();
-            Directory.CreateDirectory($"{_playniteApi.Paths.ExtensionsDataPath}\\{SUCCESS_STORY_GUID}\\Xenia\\{TitleID}");
-
-            foreach (var entry in entries)
-            {
-                switch (entry.section)
-                {
-                    //Achievement Data
-                    case 1:
-                        var localdataIndex = 0;
-
-                        Achievement achievement = new Achievement();
-
-                        BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex));                              localdataIndex += 4; //Magic Number
-                        BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex));                              localdataIndex += 4; //ID
-
-                        UInt32 imageid = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex));             localdataIndex += 4; //ImageID
-                        achievement.UrlUnlocked = $"{_successStoryXeniaDir}\\{TitleID}\\{imageid}.png";
-                        achievement.UrlLocked = $"{PluginDatabase.Paths.PluginPath}\\Resources\\Xbox360\\lock.png";
-
-                        achievement.GamerScore = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex));     localdataIndex += 4; //Gamerscore
-                        achievement.Percent = 100 - Math.Min(Math.Max(achievement.GamerScore, 0), 99);
-
-                        BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex));                              localdataIndex += 4; //Flags
-                        Int64 UnlockTime = (Int64)(BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt64(entry.data, localdataIndex)));  localdataIndex += 8; //Unlock Time
-
-                        string name = "";
-                        while (BitConverter.ToUInt16(entry.data, localdataIndex) != 0)
-                        {
-                            name += ((char)BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(entry.data, localdataIndex))).ToString();
-                            localdataIndex += 2;
-                        }
-                        localdataIndex += 2;
-
-                        achievement.Name = name;
-
-                        while (BitConverter.ToUInt16(entry.data, localdataIndex) != 0)
-                        {
-                            //Description when achievement is unlocked
-                            achievement.Description += ((char)BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(entry.data, localdataIndex))).ToString();
-                            localdataIndex += 2;
-                        }
-                        localdataIndex += 2;
-
-                        if (UnlockTime != 0)
-                        {
-                            achievement.DateUnlocked = DateTime.FromFileTime(UnlockTime);
-                        }
-                        else 
-                        {
-                            achievement.Description = null;
-                            while (BitConverter.ToUInt16(entry.data, localdataIndex) != 0)
-                            {
-                                //Description when achievement is locked
-                                achievement.Description += ((char)BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(entry.data, localdataIndex))).ToString();
-                                localdataIndex += 2;
-                            }
-                        }
-
-                        achievements.Add(achievement);
-                        break;
-
-                    //Icon Data
-                    case 2:
-                        using (var fs = new FileStream($"{_successStoryXeniaDir}\\{TitleID}\\{entry.id}.png", FileMode.Create, FileAccess.Write))
-                        {
-                            fs.Write(entry.data, 0, (Int32)entry.size);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
             }
 
             return achievements;
@@ -411,6 +222,24 @@ namespace SuccessStory.Clients
             }
         }
 
+        #region Config
+        public void InitializePaths()
+        {
+            if (string.IsNullOrEmpty(_xeniaProfilePath))
+            {
+                _logger.Error("Xbox360: Xenia profile path is null or empty");
+                return;
+            }
+
+            _successStoryDataDir = Directory.Exists(Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "SuccessStory"))
+                ? Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "SuccessStory".TrimEnd('\\') + '\\')
+                : Path.Combine(_playniteApi.Paths.ApplicationPath, "ExtensionsData", SUCCESS_STORY_GUID, "SuccessStory".TrimEnd('\\') + '\\');
+
+            _successStoryXeniaDir = Directory.Exists(Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "Xenia"))
+                ? Path.Combine(_playniteAppData, "Playnite", "ExtensionsData", SUCCESS_STORY_GUID, "Xenia".TrimEnd('\\') + '\\')
+                : Path.Combine(_playniteApi.Paths.ApplicationPath, "ExtensionsData", SUCCESS_STORY_GUID, "Xenia".TrimEnd('\\') + '\\');
+        }
+
         public override bool ValidateConfiguration()
         {
             if (CachedConfigurationValidationResult == null)
@@ -447,5 +276,186 @@ namespace SuccessStory.Clients
         {
             return PluginDatabase.PluginSettings.Settings.EnableXbox360Achievements;
         }
+
+        #endregion
+
+        #region TitleID
+        private void LoadTitleIDs()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader($"{PluginDatabase.Paths.PluginPath}\\Resources\\Xbox360\\TitleIDs.json"))
+                {
+                    xboxTitleIDs = Serialization.FromJson<Dictionary<string, List<string>>>(sr.ReadToEnd());
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Xbox360: Error loading titleIDs: {ex.Message}");
+                Common.LogError(ex, false, true, PluginDatabase.PluginName);
+            }
+        }
+
+        public string FindAndVerifyTitleID(string GameName)
+        {
+            try
+            {
+                if (xboxTitleIDs.ContainsKey(GameName))
+                {
+                    foreach (var id in xboxTitleIDs[GameName])
+                    {
+                        if (File.Exists($"{_xeniaProfilePath}\\{id}.gpd"))
+                        {
+                            return id;
+                        }
+                    }
+
+                    _logger.Error($"Xbox360: {GameName} gpd file not found! (Has the game been launched before?)");
+                    return null;
+                }
+                _logger.Error($"Xbox360: {GameName} doesnt match any name in title keys json!");
+                return null;
+            }
+            catch (Exception)
+            {
+                _logger.Error($"Xbox360: No titleID found for {GameName}");
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region GPD
+        UInt16 GPDFile_ReadUInt16(byte[] data, Int32 index, out Int32 outIndex)
+        {
+            outIndex = index + 2;
+            return BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(data, index));
+        }
+        UInt32 GPDFile_ReadUInt32(byte[] data, Int32 index, out Int32 outIndex)
+        {
+            outIndex = index + 4;
+            return BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(data, index));
+        }
+        UInt64 GPDFile_ReadUInt64(byte[] data, Int32 index, out Int32 outIndex)
+        {
+            outIndex = index + 8;
+            return BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt64(data, index));
+        }
+
+        public List<Achievement> LoadGPD(string path, string TitleID)
+        {
+            byte[] gpdFile = File.ReadAllBytes(path);
+            Int32 index = 0;
+
+            XdbfHeader header;
+            List<XdbfEntry> entries = new List<XdbfEntry>();
+
+            header = new XdbfHeader();
+            header.magic = GPDFile_ReadUInt32(gpdFile, index, out index);
+            header.version = GPDFile_ReadUInt32(gpdFile, index, out index);
+            header.entry_count = GPDFile_ReadUInt32(gpdFile, index, out index);
+            header.entry_used = GPDFile_ReadUInt32(gpdFile, index, out index);
+            header.free_count = GPDFile_ReadUInt32(gpdFile, index, out index);
+            header.free_used = GPDFile_ReadUInt32(gpdFile, index, out index);
+
+            //Index to start of data
+            Int32 freeIndex = index + (18 * (Int32)header.free_count);
+            UInt32 dataIndex = (UInt32)freeIndex + (8 * header.free_count);
+
+            //Load Data Entries
+            for (var i = 0; i < header.entry_used; i++)
+            {
+                XdbfEntry entry = new XdbfEntry();
+                entry.section = GPDFile_ReadUInt16(gpdFile, index, out index);
+                entry.id = GPDFile_ReadUInt64(gpdFile, index, out index);
+                entry.offset = GPDFile_ReadUInt32(gpdFile, index, out index);
+                entry.size = GPDFile_ReadUInt32(gpdFile, index, out index);
+
+                entry.data = new byte[entry.size];
+                Array.Copy(gpdFile, dataIndex + entry.offset, entry.data, 0, entry.size);
+
+                entries.Add(entry);
+            }
+
+            List<Achievement> achievements = new List<Achievement>();
+            Directory.CreateDirectory($"{_playniteApi.Paths.ExtensionsDataPath}\\{SUCCESS_STORY_GUID}\\Xenia\\{TitleID}");
+
+            foreach (var entry in entries)
+            {
+                switch (entry.section)
+                {
+                    //Achievement Data
+                    case 1:
+                        var localdataIndex = 0;
+
+                        Achievement achievement = new Achievement();
+
+                        BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex)); localdataIndex += 4; //Magic Number
+                        BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex)); localdataIndex += 4; //ID
+
+                        UInt32 imageid = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex)); localdataIndex += 4; //ImageID
+                        achievement.UrlUnlocked = $"{_successStoryXeniaDir}\\{TitleID}\\{imageid}.png";
+                        achievement.UrlLocked = $"{PluginDatabase.Paths.PluginPath}\\Resources\\Xbox360\\lock.png";
+
+                        achievement.GamerScore = BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex)); localdataIndex += 4; //Gamerscore
+                        achievement.Percent = 100 - Math.Min(Math.Max(achievement.GamerScore, 0), 99);
+
+                        BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt32(entry.data, localdataIndex)); localdataIndex += 4; //Flags
+                        Int64 UnlockTime = (Int64)(BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt64(entry.data, localdataIndex))); localdataIndex += 8; //Unlock Time
+
+                        string name = "";
+                        while (BitConverter.ToUInt16(entry.data, localdataIndex) != 0)
+                        {
+                            name += ((char)BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(entry.data, localdataIndex))).ToString();
+                            localdataIndex += 2;
+                        }
+                        localdataIndex += 2;
+
+                        achievement.Name = name;
+
+                        while (BitConverter.ToUInt16(entry.data, localdataIndex) != 0)
+                        {
+                            //Description when achievement is unlocked
+                            achievement.Description += ((char)BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(entry.data, localdataIndex))).ToString();
+                            localdataIndex += 2;
+                        }
+                        localdataIndex += 2;
+
+                        if (UnlockTime != 0)
+                        {
+                            achievement.DateUnlocked = DateTime.FromFileTime(UnlockTime);
+                        }
+                        else
+                        {
+                            achievement.Description = null;
+                            while (BitConverter.ToUInt16(entry.data, localdataIndex) != 0)
+                            {
+                                //Description when achievement is locked
+                                achievement.Description += ((char)BinaryPrimitives.ReverseEndianness(BitConverter.ToUInt16(entry.data, localdataIndex))).ToString();
+                                localdataIndex += 2;
+                            }
+                        }
+
+                        achievements.Add(achievement);
+                        break;
+
+                    //Icon Data
+                    case 2:
+                        using (var fs = new FileStream($"{_successStoryXeniaDir}\\{TitleID}\\{entry.id}.png", FileMode.Create, FileAccess.Write))
+                        {
+                            fs.Write(entry.data, 0, (Int32)entry.size);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            return achievements;
+        }
+
+        #endregion       
+        
     }
 }

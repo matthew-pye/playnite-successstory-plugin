@@ -225,6 +225,7 @@ namespace SuccessStory.Clients
                 };
             }
 
+            PluginDatabase.AddOrUpdate(gameAchievements);
             gameAchievements.SetRaretyIndicator();
             return gameAchievements;
         }

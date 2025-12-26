@@ -161,6 +161,7 @@ namespace SuccessStory.Clients
                 };
             }
 
+            PluginDatabase.AddOrUpdate(gameAchievements);
             return gameAchievements;
         }
 
