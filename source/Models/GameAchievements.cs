@@ -363,6 +363,13 @@ namespace SuccessStory.Models
         public bool IsRa => RAgameID > 0;
         #endregion
 
+        #region For Xenia
+        public string TitleID { get; set; }
+
+        [DontSerialize]
+        public bool IsXenia => TitleID != null;
+        #endregion
+
 
         # region For PSN
         public string CommunicationId { get; set; }

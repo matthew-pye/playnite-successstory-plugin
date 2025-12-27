@@ -422,6 +422,30 @@ namespace SuccessStory
                         });
                     }
 
+                    if (PluginSettings.Settings.EnableXbox360Achievements && achievementSource == SuccessStoryDatabase.AchievementSource.Xbox360)
+                    {
+                        gameMenuItems.Add(new GameMenuItem
+                        {
+                            MenuSection = ResourceProvider.GetString("LOCSuccessStory"),
+                            Description = ResourceProvider.GetString("LOCSuccessStoryForceTitleID"),
+                            Action = (gameMenuItem) =>
+                            {
+                                if (gameAchievements.TitleID == null)
+                                {
+                                    gameAchievements.TitleID = "";
+                                }
+
+                                StringSelectionDialogResult stringSelectionDialogResult = API.Instance.Dialogs.SelectString("Xenia", ResourceProvider.GetString("LOCSuccessStorySetTitleID"), gameAchievements.TitleID.ToString());
+                                if (stringSelectionDialogResult.Result)
+                                {
+                                    Logger.Info($"Force TitleID for {gameMenu.Name} with {stringSelectionDialogResult.SelectedString}");
+                                    gameAchievements.TitleID = stringSelectionDialogResult.SelectedString;
+                                    PluginDatabase.Refresh(gameMenu.Id);
+                                }
+                            }
+                        });
+                    }
+
                     if (!gameAchievements.IsManual)
                     {
                         gameMenuItems.Add(new GameMenuItem

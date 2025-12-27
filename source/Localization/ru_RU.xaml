@@ -108,6 +108,7 @@ Associate the platform in the plugin settings</sys:String>
     <sys:String x:Key="LOCSuccessStoryGetData">Скачать данные о достижения</sys:String>
     <sys:String x:Key="LOCSuccessStoryRefreshData">Обновить данные</sys:String>
     <sys:String x:Key="LOCSuccessStoryForceRetroAchievementsId">Force RetroAchievements Id</sys:String>
+	<sys:String x:Key="LOCSuccessStoryForceTitleID">Force Xenia TitleID</sys:String>
     <sys:String x:Key="LOCSuccessStorySetRetroAchievementsId">Set a valid RetroAchievements Id</sys:String>
     <sys:String x:Key="LOCSuccessStoryGetMissing">Скачать недостающие данные</sys:String>
     <sys:String x:Key="LOCSuccessStoryGetDataRecent">Последние игры с отсутствующими данными</sys:String>

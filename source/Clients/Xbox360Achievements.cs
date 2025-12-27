@@ -98,9 +98,24 @@ namespace SuccessStory.Clients
                 _isInitialized = true;
             }
 
-            string TitleID = FindAndVerifyTitleID(game.Name);
+            string TitleID = "";
+            if (File.Exists($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json"))
+            {
+                string json = File.ReadAllText($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json");
+                gameAchievements = Serialization.FromJson<GameAchievements>(json);
+                TitleID = gameAchievements.TitleID;
 
-            if (TitleID != null)
+                if (TitleID == null || TitleID == "")
+                {
+                    TitleID = FindAndVerifyTitleID(game.Name);
+                }
+            }
+            else
+            {
+                TitleID = FindAndVerifyTitleID(game.Name);
+            }
+
+            if (TitleID != null && TitleID != "")
             {
                 try
                 {
@@ -111,6 +126,8 @@ namespace SuccessStory.Clients
                         {
                             string successStoryJsonFile = Path.Combine(_successStoryDataDir, $"{gameId}.json");
                             gameAchievements.Items = ProcessAchievementsImproved(TitleID, successStoryJsonFile, game);
+                            gameAchievements.TitleID = TitleID;
+                            gameAchievements.SourcesLink = new SourceLink { GameName = game.Name, Name = "Xenia" };
 
                             if (API.Instance.MainView.SelectedGames?.FirstOrDefault()?.Id == game.Id)
                             {
@@ -310,15 +327,15 @@ namespace SuccessStory.Clients
                         }
                     }
 
-                    _logger.Error($"Xbox360: {GameName} gpd file not found! (Has the game been launched before?)");
+                    _logger.Error($"{GameName} gpd file not found! (Has the game been launched before?)");
                     return null;
                 }
-                _logger.Error($"Xbox360: {GameName} doesnt match any name in title keys json!");
+                _logger.Error($"{GameName} doesnt match any name in title keys json!");
                 return null;
             }
             catch (Exception)
             {
-                _logger.Error($"Xbox360: No titleID found for {GameName}");
+                _logger.Error($"No titleID found for {GameName}");
                 return null;
             }
         }
