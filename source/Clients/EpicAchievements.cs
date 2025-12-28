@@ -82,6 +82,7 @@ namespace SuccessStory.Clients
                 ShowNotificationPluginNoAuthenticate(ExternalPlugin.SuccessStory);
             }
 
+            PluginDatabase.AddOrUpdate(gameAchievements);
             gameAchievements.SetRaretyIndicator();
             return gameAchievements;
         }

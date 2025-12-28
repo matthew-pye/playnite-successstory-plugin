@@ -258,6 +258,7 @@ namespace SuccessStory.Clients
                 ShowNotificationPluginNoConfiguration();
             }
 
+            PluginDatabase.AddOrUpdate(gameAchievements);
             gameAchievements.SetRaretyIndicator();
             return gameAchievements;
         }
