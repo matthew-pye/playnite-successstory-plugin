@@ -1,19 +1,20 @@
-﻿using Playnite.SDK.Models;
+﻿using CommonPlayniteShared.Common;
 using CommonPluginsShared;
+using CommonPluginsShared.Extensions;
+using Playnite.SDK;
+using Playnite.SDK.Data;
+using Playnite.SDK.Models;
 using SuccessStory.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
-using CommonPluginsShared.Extensions;
-using Playnite.SDK;
-using CommonPlayniteShared.Common;
-using System.Globalization;
-using static CommonPluginsShared.PlayniteTools;
 using System.Text.RegularExpressions;
-using Paths = CommonPlayniteShared.Common.Paths;
 using System.Threading;
+using System.Xml.Linq;
+using static CommonPluginsShared.PlayniteTools;
+using Paths = CommonPlayniteShared.Common.Paths;
 
 namespace SuccessStory.Clients
 {
@@ -163,7 +164,7 @@ namespace SuccessStory.Clients
                             try
                             {
                                 string dtHex = hexData.Substring(44, 14);
-                                DateTime dt = new DateTime(long.Parse(dtHex, NumberStyles.AllowHexSpecifier) * 10L);
+                                DateTime dt = new DateTime(long.Parse(dtHex, NumberStyles.AllowHexSpecifier) * 10L, DateTimeKind.Utc);
                                 allAchievements[id].DateUnlocked = dt;
 
                                 if (dt == DateTime.MinValue)
@@ -248,7 +249,7 @@ namespace SuccessStory.Clients
             List<string> foldersPath = new List<string> { PluginDatabase.PluginSettings.Settings.Rpcs3InstallationFolder };
             PluginDatabase.PluginSettings.Settings.Rpcs3InstallationFolders?.ForEach(x => foldersPath.Add(x.FolderPath));
 
-            string path = API.Instance.ExpandGameVariables(game, Path.Combine(game.InstallDirectory, ".."), GetGameEmulator(game)?.InstallDir);
+            string path = API.Instance.ExpandGameVariables(game, Path.Combine(game.InstallDirectory, ".."), GetGameEmulator(game)?.InstallDir);        
             List<string> file = Tools.FindFile(path, "TROPHY.TRP", true);
 
             if (file.Count() == 0)
