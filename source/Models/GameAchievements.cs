@@ -368,6 +368,10 @@ namespace SuccessStory.Models
         public bool IsXenia => TitleID != null;
         #endregion
 
+        #region For RPCS3
+        public string TrophyPath { get; set; }
+
+        #endregion
 
         # region For PSN
         public string CommunicationId { get; set; }

@@ -20,6 +20,8 @@ namespace SuccessStory.Clients
 {
     public class Rpcs3Achievements : GenericAchievements
     {
+        string TrophyPath = "";
+
         public Rpcs3Achievements() : base("RPCS3")
         {
 
@@ -27,16 +29,32 @@ namespace SuccessStory.Clients
 
         public override GameAchievements GetAchievements(Game game)
         {
-            GameAchievements gameAchievements = SuccessStory.PluginDatabase.GetDefault(game);
-            List<Achievement> allAchievements = new List<Achievement>();
+            GameAchievements gameAchievements = PluginDatabase.Get(game, true);
 
+            if (gameAchievements == null)
+            {
+                gameAchievements = SuccessStory.PluginDatabase.GetDefault(game);
+            }
+            if (File.Exists($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json")) //Added to import external edits while playnite is running (Exclu. Achievements)
+            {
+                string json = File.ReadAllText($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json");
+                GameAchievements filegameAchievements = Serialization.FromJson<GameAchievements>(json);
+
+                if (filegameAchievements.DateLastRefresh > gameAchievements.DateLastRefresh)
+                {
+                    gameAchievements = filegameAchievements;
+                }
+            }
+
+            TrophyPath = gameAchievements.TrophyPath;
+
+            List<Achievement> allAchievements = new List<Achievement>();
 
             if (IsConfigured())
             {
                 List<string> trophyDirectories = FindTrophyGameFolder(game);
                 string trophyFile = "TROPUSR.DAT";
                 string trophyFileDetails = "TROPCONF.SFM";
-
 
                 // Directory control
                 if (trophyDirectories.Count == 0)
@@ -45,6 +63,8 @@ namespace SuccessStory.Clients
                     return gameAchievements;
                 }
 
+                gameAchievements.Items.Clear(); //Clear Achievements to replace with new data
+                gameAchievements.IsSaved = false;
                 foreach (string trophyDirectory in trophyDirectories)
                 {
                     allAchievements = new List<Achievement>();
@@ -169,7 +189,7 @@ namespace SuccessStory.Clients
 
                                 if (dt == DateTime.MinValue)
                                 {
-                                    dt = new DateTime(2000, 0, 0, 0, 0, 0);
+                                    dt = new DateTime(1982, 12, 15, 0, 0, 0, 0);
                                 }
                             }
                             catch (Exception ex)
@@ -188,8 +208,10 @@ namespace SuccessStory.Clients
                 ShowNotificationPluginNoConfiguration();
             }
 
+            gameAchievements.TrophyPath = TrophyPath;
             PluginDatabase.AddOrUpdate(gameAchievements);
             gameAchievements.SetRaretyIndicator();
+            
             return gameAchievements;
         }
 
@@ -249,7 +271,17 @@ namespace SuccessStory.Clients
             List<string> foldersPath = new List<string> { PluginDatabase.PluginSettings.Settings.Rpcs3InstallationFolder };
             PluginDatabase.PluginSettings.Settings.Rpcs3InstallationFolders?.ForEach(x => foldersPath.Add(x.FolderPath));
 
-            string path = API.Instance.ExpandGameVariables(game, Path.Combine(game.InstallDirectory, ".."), GetGameEmulator(game)?.InstallDir);        
+            string path;
+            if (string.IsNullOrEmpty(TrophyPath))
+            {
+                path = API.Instance.ExpandGameVariables(game, Path.Combine(game.InstallDirectory, ".."), GetGameEmulator(game)?.InstallDir);
+                TrophyPath = path;
+            }
+            else
+            {
+                path = TrophyPath;
+            }
+
             List<string> file = Tools.FindFile(path, "TROPHY.TRP", true);
 
             if (file.Count() == 0)

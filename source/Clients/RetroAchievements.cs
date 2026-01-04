@@ -2,6 +2,8 @@
 using CommonPluginsShared;
 using CommonPluginsShared.Extensions;
 using CommonPluginsShared.Models;
+using CommonPluginsShared.Plugins;
+using CommonPluginsStores.Models;
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using Playnite.SDK.Models;
@@ -81,17 +83,30 @@ namespace SuccessStory.Clients
 
         public override GameAchievements GetAchievements(Game game)
         {
-            GameAchievements gameAchievements = SuccessStory.PluginDatabase.GetDefault(game);
+            GameAchievements gameAchievements = PluginDatabase.Get(game, true);
+
+            if (gameAchievements == null)
+            {
+                gameAchievements = SuccessStory.PluginDatabase.GetDefault(game);
+            }
+            if (File.Exists($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json")) //Added to fix external edits while playnite is running
+            {
+                string json = File.ReadAllText($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json");
+                GameAchievements filegameAchievements = Serialization.FromJson<GameAchievements>(json);
+
+                if (filegameAchievements.DateLastRefresh > gameAchievements.DateLastRefresh)
+                {
+                    gameAchievements = filegameAchievements;
+                }
+            }
+
+            GameId = gameAchievements.RAgameID;
+            gameAchievements.IsSaved = false;
+
             List<Achievement> AllAchievements = new List<Achievement>();
 
             if (IsConfigured())
             {
-                if (File.Exists($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json"))
-                {
-                    string json = File.ReadAllText($"{PluginDatabase.Paths.PluginDatabasePath}\\{game.Id}.json");
-                    gameAchievements = Serialization.FromJson<GameAchievements>(json);
-                }
-
                 if (GameId == 0)
                 {
                     int consoleID = GetConsoleId(game);

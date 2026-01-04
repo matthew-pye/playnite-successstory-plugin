@@ -100,7 +100,9 @@
 	<sys:String x:Key="LOCSuccessStoryEnableRpcs3HomeFolder">Домашня тека користувача</sys:String>
 	<sys:String x:Key="LOCSuccessStoryEnableShadPS4Folder">ShadPS4 user folder</sys:String>
 
-	<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia Profile Location</sys:String>
+	<sys:String x:Key="LOCSuccessStorySetTrophyPath">Set TROPDIR path</sys:String>
+	<sys:String x:Key="LOCSuccessStoryNotATROPDIR">A TROPDIR folder was not selected!</sys:String>
+<sys:String x:Key="LOCSuccessStoryEnableXeniaFolder">Xenia Profile Location</sys:String>
 
 	<sys:String x:Key="LOCSuccessStoryEnableRetroAchievementsView">Використовувати окремий вигляд для RetroAchievements</sys:String>
 

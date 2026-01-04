@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -442,6 +443,50 @@ namespace SuccessStory
                                     gameAchievements.TitleID = stringSelectionDialogResult.SelectedString;
                                     PluginDatabase.Refresh(gameMenu.Id);
                                 }
+                            }
+                        });
+                    }
+
+                    if (PluginSettings.Settings.EnableRpcs3Achievements && achievementSource == SuccessStoryDatabase.AchievementSource.RPCS3)
+                    {
+                        gameMenuItems.Add(new GameMenuItem
+                        {
+                            MenuSection = ResourceProvider.GetString("LOCSuccessStory"),
+                            Description = ResourceProvider.GetString("LOCSuccessStorySetTrophyPath"),
+                            Action = (gameMenuItem) =>
+                            {
+                                string TrophyPath = "";
+                                if (gameAchievements.TrophyPath != null || gameAchievements.TrophyPath != "")
+                                {
+                                    TrophyPath = API.Instance.Dialogs.SelectFolder(gameAchievements.TrophyPath);
+                                }
+                                else
+                                {
+                                    TrophyPath = API.Instance.Dialogs.SelectFolder();
+                                }
+
+                                if(TrophyPath.EndsWith("\\TROPDIR"))
+                                {
+                                    if (TrophyPath != null || TrophyPath != "")
+                                    {
+                                        Logger.Info($"Set TROPDIR Path for {gameMenu.Name} with {TrophyPath}");
+                                        gameAchievements.TrophyPath = TrophyPath;
+                                        PluginDatabase.Refresh(gameMenu.Id);
+                                    }
+                                }
+                                else
+                                {
+                                    API.Instance.Notifications.Add(new NotificationMessage(
+                                                                    $"{PluginDatabase.PluginName}-RPCS3-notTROPDIR",
+                                                                    $"{PluginDatabase.PluginName}\r\n{ResourceProvider.GetString("LOCSuccessStoryNotATROPDIR")}",
+                                                                    NotificationType.Error,
+                                                                    () => { }
+                                    ));
+
+                                    Logger.Info($"TROPDIR folder not selected!");
+                                }
+
+                                
                             }
                         });
                     }
