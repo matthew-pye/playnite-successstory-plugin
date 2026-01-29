@@ -648,6 +648,7 @@ namespace SuccessStory.Clients
                                 break;
 
                             case "%appdata%\\goldberg steamemu saves":
+                            case "%appdata%\\gse saves":
                                 if (File.Exists(Environment.ExpandEnvironmentVariables(DirAchivements) + $"\\{appId}\\achievements.json"))
                                 {
                                     string Name = string.Empty;
@@ -1005,7 +1006,7 @@ namespace SuccessStory.Clients
                                 Description = x.Description,
                                 UrlUnlocked = x.UrlUnlocked,
                                 UrlLocked = x.UrlLocked,
-                                DateUnlocked = x.DateUnlocked,
+                                DateUnlocked = ReturnAchievements[j].DateUnlocked,
                                 GamerScore = x.GamerScore
                             };
 
